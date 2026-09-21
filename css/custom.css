@@ -1,0 +1,39 @@
+/* ICL additions on top of the template stylesheet. Keep this file small. */
+
+/* Hero base: dark charcoal (the animation and video draw on top of it) */
+#home-area { background: #0d0e13; }
+
+/* Hero caption vertical centering */
+.hero-caption { display: table; height: 100%; width: 100%; }
+.hero-caption .slider-content { display: table-cell; vertical-align: middle; }
+
+/* Author line under each publication title */
+.pub-authors { display: block; color: #999; font-size: 12px; letter-spacing: 0.5px; margin-top: 6px; line-height: 18px; }
+
+/* Ribbon holder needs relative positioning inside the thumb */
+.ribbon-holder { z-index: 5; }
+
+/* Slightly narrower "about" intro on very large screens */
+.bio p { text-align: left; }
+
+/* Keep the sticky header from covering anchor targets on jump */
+a[name] { display: block; position: relative; top: -70px; visibility: hidden; }
+
+/* Team placeholder silhouettes look softer */
+.team-item-image img { background: #dfdfdf; }
+
+/* Even card heights in the publication grid */
+.portfolio-caption.caption-border { min-height: 190px; }
+
+/* Template pulls the hero caption up on phones; our table-cell centering makes that unnecessary */
+@media only screen and (max-width: 767px) { .hero-caption { margin-top: 0; } }
+
+/* Hero slideshow: photo layers fade over the video background */
+#home-area { position: relative; }
+#home-area .hero-slides { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; overflow: hidden; }
+#home-area .hero-slide { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-size: cover; background-position: center center; opacity: 0; transition: opacity 1.4s ease-in-out; transform: scale(1.04); }
+#home-area .hero-slide.is-active { opacity: 1; transform: scale(1); transition: opacity 1.4s ease-in-out, transform 7s linear; }
+#home-area.bg-black-alfa-40::before { z-index: 2; }
+#home-area .hero-caption { z-index: 3; }
+@media (prefers-reduced-motion: reduce) { #home-area .hero-slide { transition: none; transform: none; } }
+#home-area .hero-canvas { width: 100%; height: 100%; display: block; }
