@@ -4,8 +4,10 @@ This is the source of the Interactive Computing Lab website (Stevens Institute o
 It is a **single static web page**: plain HTML, CSS, and JavaScript. There is nothing to install, compile, or build.
 If you can edit a text file and upload it to GitHub, you can maintain this site.
 
-**Live site:** https://interactivecomputinglab.github.io/lab_website/
-**Repository:** https://github.com/InteractiveComputingLab/lab_website (the site files are in the `docs/` folder)
+**Live site:** https://interactivecomputinglab.github.io/
+**Repository:** https://github.com/InteractiveComputingLab/interactivecomputinglab.github.io (the site files are at the top level of the repository)
+
+The repository name is special: GitHub publishes a repository called `<organization>.github.io` at that address automatically, from the `main` branch. Do not rename it.
 
 A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at https://azizulhaque.me/ICLAB/).
 
@@ -14,7 +16,7 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 ## 1. How the site is organised
 
 ```
-docs/
+(repository root)
 ├── index.html          ← THE ENTIRE SITE. 95% of edits happen in this one file.
 ├── style.css           Template stylesheet. Do not edit. Override in css/custom.css instead.
 ├── css/custom.css      Our small set of style overrides (hero, publication cards).
@@ -45,19 +47,19 @@ The page has these sections, in order. Each starts with an HTML comment you can 
 
 ### Option A — edit in the browser (no software needed)
 
-1. Open the repository on GitHub and go into the `docs` folder.
+1. Open the repository on GitHub.
 2. Click the file you want to change (usually `index.html`), then click the **pencil icon** (Edit).
 3. Make your change. Use Ctrl+F / Cmd+F to find the section.
 4. Click **Commit changes**, write a one-line note such as "Add ASSETS 2027 paper", and commit to `main`.
 5. Wait one to two minutes. Reload the live site. If you still see the old version, hard-refresh (Cmd+Shift+R or Ctrl+F5).
 
-To add an image in the browser: open the right folder (for example `docs/img/team`), click **Add file → Upload files**, drop the image in, and commit.
+To add an image in the browser: open the right folder (for example `img/team`), click **Add file → Upload files**, drop the image in, and commit.
 
 ### Option B — edit on your computer (recommended for bigger changes)
 
 ```bash
-git clone https://github.com/InteractiveComputingLab/lab_website.git
-cd lab_website/docs
+git clone https://github.com/InteractiveComputingLab/interactivecomputinglab.github.io.git
+cd interactivecomputinglab.github.io
 python3 -m http.server 8080        # preview at http://localhost:8080
 # ... edit index.html and images, refresh the browser to check ...
 git add -A
@@ -85,7 +87,7 @@ Keep the list to roughly the last two years; delete old lines from the bottom.
 
 ### 3.2 Add or change a team member
 
-1. Save a portrait photo as `docs/img/team/firstname-lastname.jpg`. Crop it to a **portrait ratio of about 3:4** (600 × 820 px). Square or landscape photos will look wrong next to the others.
+1. Save a portrait photo as `img/team/firstname-lastname.jpg`. Crop it to a **portrait ratio of about 3:4** (600 × 820 px). Square or landscape photos will look wrong next to the others.
 2. Find `<h2>Our Team</h2>`. Members are in rows of four (`<div class="row">` ... four `col-sm-6 col-md-3` columns). Copy one member block and edit it:
 
 ```html
@@ -118,7 +120,7 @@ If a row already has four people, start a new `<div class="row">` ... `</div>` a
 
 ### 3.3 Add a publication
 
-1. Make a **square thumbnail** (600 × 600 px JPG) and save it as `docs/img/portfolio/project-<short-id>.jpg`. A teaser figure from the paper, a photo from the study, or a simple illustration all work. Keep the style consistent with the existing ones.
+1. Make a **square thumbnail** (600 × 600 px JPG) and save it as `img/portfolio/project-<short-id>.jpg`. A teaser figure from the paper, a photo from the study, or a simple illustration all work. Keep the style consistent with the existing ones.
 2. Find `<div id="portfolio-grid"`. The first card after it is the newest paper. Copy one card and paste it **above** the first one:
 
 ```html
@@ -236,7 +238,7 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 
 **The hero video does not play.** It only plays over HTTPS on the live site, not from a file opened by double-clicking. It also never plays on phones (browsers block autoplay), which is expected; the animations show instead.
 
-**GitHub says the site is not publishing.** Repository Settings → Pages must show Source: *Deploy from a branch*, Branch: `main`, Folder: `/docs`. The `.nojekyll` file must be present in `docs/`.
+**GitHub says the site is not publishing.** Repository Settings → Pages must show Source: *Deploy from a branch*, Branch: `main`, Folder: `/ (root)`. The `.nojekyll` file must be present at the top level. The old address https://interactivecomputinglab.github.io/lab_website/ redirects here and can be left alone.
 
 ---
 
