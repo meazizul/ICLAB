@@ -249,3 +249,9 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 3. Walk them through one real change together, for example adding a news item, and watch it go live.
 
 That is the whole process. Everything else is copy, paste, and edit.
+
+---
+
+## 8. Credits
+
+Designed and built by Azizul Haque, September 2026.
