@@ -249,9 +249,3 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 3. Walk them through one real change together, for example adding a news item, and watch it go live.
 
 That is the whole process. Everything else is copy, paste, and edit.
-
----
-
-## 8. Credits
-
-The page layout follows the University of Michigan Soundability Lab site and is built on the free "White – Minimal Portfolio" Bootstrap template. Icons: Ionicons and et-line. Publication thumbnails were drawn for the lab. First version built September 2026 by Azizul Haque.
