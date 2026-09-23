@@ -25,7 +25,8 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 ├── img/team/           One portrait per person, 600×820 px JPG, named firstname-lastname.jpg
 ├── img/portfolio/      One square thumbnail per paper, 600×600 px JPG, named project-<id>.jpg
 ├── img/class/          Course card images, 1500×460 px
-├── img/favicon.png     Browser tab icon
+├── img/logo/           Lab logo: icl-mark.png (icon), icl-logo-dark.png, icl-logo-white.png
+├── img/favicon.png     Browser tab icon (plus favicon-32.png, apple-touch-icon.png, og-image.png for link previews)
 └── .nojekyll           Tells GitHub Pages to publish the files exactly as they are. Keep it.
 ```
 
