@@ -88,6 +88,14 @@ Find `<h2>Recent News</h2>`. The items are lines inside one `<p>`. Add the newes
 
 Keep the list to roughly the last two years; delete old lines from the bottom.
 
+The pulsing **NEW** badge is added automatically to whichever line is first, so it moves on its own when you add a line at the top. To link a news item to a photo album, add a Photos pill at the end of the line, pointing at the album's `id` from the Gallery section:
+
+```html
+<a class="news-photos" href="#gallery-assets2026"><i class="ion-images"></i> Photos</a>
+```
+
+Clicking it scrolls to the Gallery and opens that album. Link paper titles in the news to their DOI (`<a href="https://doi.org/..." target="_blank" rel="noopener"><em>Title</em></a>`) so readers can reach the paper in one click.
+
 ### 3.2 Add or change a team member
 
 1. Save a portrait photo as `img/team/firstname-lastname.jpg`. Crop it to a **portrait ratio of about 3:4** (600 × 820 px). Square or landscape photos will look wrong next to the others.
@@ -189,6 +197,7 @@ Find `<!-- videos area start -->`. Copy the `blog-item` block and change the You
 
 1. Make a folder `img/gallery/<album-name>/` (lowercase, hyphens). Put the photos in it as `01.jpg`, `02.jpg`, … (longest side about 1600 px, under 500 KB each). For each photo also save a small **600 × 400 px** thumbnail as `01-thumb.jpg`, `02-thumb.jpg`, … and a cover image `cover.jpg` cropped to **900 × 562 px** (16:10). If you skip a thumbnail, the full photo is used in its place (it still works, it just loads slower).
 2. Find `<!-- gallery area start -->`. Copy one `<div class="col-sm-6 col-md-4">` block and paste it where you want the album to appear (newest first). Edit:
+   - the `id="gallery-<album-name>"` on the `gallery-item` div (this is what news Photos links point at),
    - the `cover.jpg` path and its `alt` text,
    - `gallery-meta` (month and place), `gallery-title` (event name), and the short paragraph (these also appear at the top of the album panel),
    - the hidden `<ul class="gallery-album">`: one `<li><a href="img/gallery/<album-name>/01.jpg" data-thumb="img/gallery/<album-name>/01-thumb.jpg" data-alt="...">Caption</a></li>` per photo. The caption shows under the thumbnail in the album panel and under the large photo; write the event, the authors, and what is pictured.

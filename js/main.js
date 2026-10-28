@@ -174,8 +174,24 @@
 			$card.on('click', function () { openAlbum(); }).on('keydown', function (e) {
 				if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) { e.preventDefault(); openAlbum(); }
 			});
+			$card.data('openAlbum', openAlbum);
 		});
+
+		/* Deep links: a link to #gallery-<album> (for example the "Photos" pills in Recent News, or the
+		   page URL) scrolls to that album card and opens it. */
+		function openAlbumByHash(hash, delay) {
+			var open = hash && /^#gallery-/.test(hash) && $(hash).data('openAlbum');
+			if (open) { setTimeout(open, delay); }
+			return !!open;
+		}
+		$(document).on('click', 'a[href^="#gallery-"]', function () { openAlbumByHash(this.getAttribute('href'), 700); });
+		$(window).on('hashchange', function () { openAlbumByHash(location.hash, 300); });
+		openAlbumByHash(location.hash, 900);
 	})();
+
+	/* Recent News: mark the newest line (the first one) with a pulsing NEW badge. It moves by itself
+	   when a new line is added at the top, so there is nothing to update by hand. */
+	$('h2').filter(function () { return $.trim($(this).text()) === 'Recent News'; }).next('p').find('strong').first().after('<span class="news-new" title="Latest news">NEW</span>');
 
 	/* magnificPopup video view */
 	$('.popup-video').magnificPopup({
