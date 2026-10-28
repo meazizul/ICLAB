@@ -75,40 +75,77 @@
 		}
 	});
 
-	/* Gallery albums: clicking a card opens every photo in its hidden .gallery-album list as a
-	   slideshow. data-autoplay on the section (milliseconds) advances slides once through to the
-	   last photo, or until the visitor presses a key, clicks, or touches; it is off when the OS
-	   asks for reduced motion. */
+	/* Gallery albums. Clicking a card opens the album: a panel with every photo as a small
+	   thumbnail and its caption (built from the hidden .gallery-album list). Clicking a thumbnail
+	   opens that photo large with its description; closing the photo returns to the album panel.
+	   data-autoplay on the section (milliseconds) steps the large view through to the last photo
+	   unless the visitor presses a key, clicks, or touches; it is off when the OS asks for reduced
+	   motion. */
 	(function () {
-		var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+			BLOOM_MS = 340;
+		function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 		$('.gallery-item').each(function () {
 			var $card = $(this),
 				album = $.trim($card.find('.gallery-title').text()),
+				meta = $card.find('.gallery-meta').html() || '',
+				blurb = $card.find('.gallery-caption p').html() || '',
 				items = $card.find('.gallery-album a').map(function () {
-					return { src: this.getAttribute('href'), caption: $(this).html(), alt: this.getAttribute('data-alt') || album };
-				}).get();
-			if (!items.length) { return; }
-			$card.find('.gallery-count-num').text(items.length);
-			function open() {
+					var href = this.getAttribute('href');
+					return { src: href, thumb: this.getAttribute('data-thumb') || href, caption: $(this).html(), alt: this.getAttribute('data-alt') || album };
+				}).get(),
+				n = items.length, $panel, leaving = false;
+			if (!n) { return; }
+			$card.find('.gallery-count-num').text(n);
+
+			/* Build the album panel once */
+			$panel = $('<div class="gallery-panel mfp-hide" role="dialog" aria-label="' + esc(album) + ' album"></div>');
+			$panel.append('<div class="gallery-panel-head"><span class="gallery-meta">' + meta + '</span><h3>' + esc(album) + '</h3><p>' + blurb + '</p><span class="gallery-panel-hint">' + n + (n === 1 ? ' photo' : ' photos') + ' &middot; click one to view it</span></div>');
+			var $grid = $('<div class="gallery-grid"></div>');
+			$.each(items, function (i, it) {
+				$grid.append('<button type="button" class="gallery-thumb" data-index="' + i + '" style="animation-delay:' + (i * 60) + 'ms">' +
+					'<span class="gallery-thumb-img"><img src="' + esc(it.thumb) + '" alt="' + esc(it.alt) + '" loading="lazy"></span>' +
+					'<span class="gallery-thumb-cap">' + it.caption + '</span></button>');
+			});
+			$panel.append($grid);
+			$('body').append($panel);
+
+			function openAlbum(focusIndex) {
+				leaving = false;
+				$.magnificPopup.open({
+					items: { src: $panel, type: 'inline' },
+					mainClass: 'mfp-bloom mfp-album-pop',
+					removalDelay: BLOOM_MS,
+					closeBtnInside: true,
+					callbacks: {
+						open: function () {
+							if (typeof focusIndex === 'number') { $panel.find('.gallery-thumb[data-index="' + focusIndex + '"]').focus(); }
+						},
+						close: function () { if (!leaving) { $card.focus(); } }
+					}
+				});
+			}
+
+			function openPhoto(index) {
 				var delay = reduceMotion ? 0 : (parseInt($card.closest('[data-autoplay]').attr('data-autoplay'), 10) || 0),
 					timer = null;
 				function stop() { if (timer) { clearInterval(timer); timer = null; } $(document).off('.galleryauto'); }
 				$.magnificPopup.open({
 					items: items,
 					type: 'image',
-					gallery: { enabled: items.length > 1, preload: [0, 2], tCounter: '%curr% of %total%' },
-					mainClass: 'mfp-gallery-pop mfp-img-mobile',
-					removalDelay: 320,
+					gallery: { enabled: n > 1, preload: [0, 2], tCounter: '%curr% of %total%' },
+					mainClass: 'mfp-bloom mfp-gallery-pop mfp-img-mobile',
+					removalDelay: BLOOM_MS,
 					closeOnContentClick: false,
 					image: {
-						titleSrc: function (item) { return '<strong>' + album + '</strong>' + item.data.caption; },
+						titleSrc: function (item) { return '<strong>' + esc(album) + '</strong>' + item.data.caption; },
 						verticalFit: true
 					},
 					callbacks: {
 						open: function () {
 							var mfp = this;
-							if (delay && items.length > 1) {
-								timer = setInterval(function () { if (mfp.index >= items.length - 1) { stop(); } else { mfp.next(); } }, delay);
+							if (delay && n > 1) {
+								timer = setInterval(function () { if (mfp.index >= n - 1) { stop(); } else { mfp.next(); } }, delay);
 								setTimeout(function () { $(document).on('keydown.galleryauto mousedown.galleryauto touchstart.galleryauto', stop); }, 0);
 							}
 						},
@@ -118,12 +155,24 @@
 							var a = document.createElement('a'); a.href = this.currItem.src; /* absolute URL: the stylesheet would otherwise resolve it relative to css/ */
 							if (fig && fig.style.setProperty) { fig.style.setProperty('--gallery-bg', 'url("' + a.href + '")'); }
 						},
-						close: function () { stop(); $card.focus(); }
+						close: function () {
+							var last = this.index;
+							stop();
+							/* back to the album panel, like stepping out of a submenu */
+							setTimeout(function () { openAlbum(last); }, BLOOM_MS);
+						}
 					}
-				});
+				}, index);
 			}
-			$card.on('click', open).on('keydown', function (e) {
-				if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) { e.preventDefault(); open(); }
+
+			$panel.on('click', '.gallery-thumb', function () {
+				var i = parseInt(this.getAttribute('data-index'), 10);
+				leaving = true;
+				$.magnificPopup.close();
+				setTimeout(function () { openPhoto(i); }, BLOOM_MS);
+			});
+			$card.on('click', function () { openAlbum(); }).on('keydown', function (e) {
+				if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) { e.preventDefault(); openAlbum(); }
 			});
 		});
 	})();
