@@ -25,6 +25,7 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 ├── img/team/           One portrait per person, 600×820 px JPG, named firstname-lastname.jpg
 ├── img/portfolio/      One square thumbnail per paper, 600×600 px JPG, named project-<id>.jpg
 ├── img/class/          Course card images, 1500×460 px
+├── img/gallery/        One folder per album: cover.jpg (900×562) plus 01.jpg, 02.jpg, … (photos)
 ├── img/logo/           Lab logo: icl-mark.png (icon), icl-logo-dark.png, icl-logo-white.png
 ├── img/favicon.png     Browser tab icon (plus favicon-32.png, apple-touch-icon.png, og-image.png for link previews)
 └── .nojekyll           Tells GitHub Pages to publish the files exactly as they are. Keep it.
@@ -40,6 +41,7 @@ The page has these sections, in order. Each starts with an HTML comment you can 
 | Publications | `<!-- basic-portfolio-area start -->` | Filter buttons and one card per paper |
 | Classes | `<a name="classes">` | Courses taught by Dr. Hong |
 | Videos | `<!-- videos area start -->` | Embedded YouTube talks |
+| Gallery | `<!-- gallery area start -->` | Photo albums (conference trips, lab events) that open as a slideshow |
 | Lab Openings | `<!-- apply area start -->` | Recruiting text and contact details |
 
 ---
@@ -183,11 +185,22 @@ Find `<h2>Classes Taught by Dr. Hong</h2>`. Copy one `<div class="col-sm-6 col-m
 
 Find `<!-- videos area start -->`. Copy the `blog-item` block and change the YouTube ID in the `data-src` URL (`https://www.youtube.com/embed/VIDEO_ID`), the author, title, description, and link. Two videos fit per row; the single existing block is centred with `col-sm-offset-2`, so remove the two `offset` classes when you add a second one.
 
-### 3.7 Edit the About text, Lab Openings, or contact details
+### 3.7 Add a photo album to the Gallery
+
+1. Make a folder `img/gallery/<album-name>/` (lowercase, hyphens). Put the photos in it as `01.jpg`, `02.jpg`, … (longest side about 1600 px, under 500 KB each) and a cover image `cover.jpg` cropped to **900 × 562 px** (16:10).
+2. Find `<!-- gallery area start -->`. Copy one `<div class="col-sm-6 col-md-4">` block and paste it where you want the album to appear (newest first). Edit:
+   - the `cover.jpg` path and its `alt` text,
+   - `gallery-meta` (month and place), `gallery-title` (event name), and the short paragraph,
+   - the hidden `<ul class="gallery-album">`: one `<li><a href="img/gallery/<album-name>/01.jpg" data-alt="...">Caption</a></li>` per photo. The caption shows under the photo in the slideshow; write the event, the authors, and what is pictured.
+3. The photo count badge on the cover fills in by itself. Three albums fit per row; a fourth starts a new row automatically.
+
+Slideshow behaviour: it slides up when opened, arrows and the keyboard move between photos, Esc closes, and it advances on its own every 3.5 seconds until the visitor interacts. Change the speed with the `data-autoplay` attribute (milliseconds) on the gallery `<div>`, or set it to `0` to turn autoplay off.
+
+### 3.8 Edit the About text, Lab Openings, or contact details
 
 These are ordinary paragraphs. Find the heading (`<h2>About us</h2>` or `<h2>Lab Openings</h2>`) and edit the text inside the `<p>` tags. Office, phone, and email are in the last paragraph of Lab Openings.
 
-### 3.8 Change the hero (top of page)
+### 3.9 Change the hero (top of page)
 
 The hero element is `<div id="home-area" ...>`. Its attributes control everything:
 
@@ -211,6 +224,8 @@ The title and tagline are the `<h1>` and `<p class="lead">` right below.
 | Team portrait | 600 × 820 px (3:4 portrait) | JPG, under 200 KB | `img/team/` |
 | Paper thumbnail | 600 × 600 px (square) | JPG, under 200 KB | `img/portfolio/` |
 | Class card | 1500 × 460 px | JPG | `img/class/` |
+| Gallery cover | 900 × 562 px (16:10) | JPG, under 150 KB | `img/gallery/<album>/cover.jpg` |
+| Gallery photo | longest side 1600 px | JPG, under 500 KB | `img/gallery/<album>/01.jpg` … |
 
 Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), Photos on Windows, or https://squoosh.app in the browser. Use only lowercase letters, numbers, and hyphens in file names.
 

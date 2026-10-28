@@ -75,6 +75,53 @@
 		}
 	});
 
+	/* Gallery albums: clicking a card opens every photo in its hidden .gallery-album list as a
+	   slideshow. data-autoplay on the section (milliseconds) advances slides until the visitor
+	   presses a key, clicks, or touches; it is off when the OS asks for reduced motion. */
+	(function () {
+		var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		$('.gallery-item').each(function () {
+			var $card = $(this),
+				album = $.trim($card.find('.gallery-title').text()),
+				items = $card.find('.gallery-album a').map(function () {
+					return { src: this.getAttribute('href'), caption: $(this).html(), alt: this.getAttribute('data-alt') || album };
+				}).get();
+			if (!items.length) { return; }
+			$card.find('.gallery-count-num').text(items.length);
+			function open() {
+				var delay = reduceMotion ? 0 : (parseInt($card.closest('[data-autoplay]').attr('data-autoplay'), 10) || 0),
+					timer = null;
+				function stop() { if (timer) { clearInterval(timer); timer = null; } $(document).off('.galleryauto'); }
+				$.magnificPopup.open({
+					items: items,
+					type: 'image',
+					gallery: { enabled: items.length > 1, preload: [0, 2], tCounter: '%curr% of %total%' },
+					mainClass: 'mfp-gallery-pop mfp-img-mobile',
+					removalDelay: 320,
+					closeOnContentClick: false,
+					image: {
+						titleSrc: function (item) { return '<strong>' + album + '</strong>' + item.data.caption; },
+						verticalFit: true
+					},
+					callbacks: {
+						open: function () {
+							var mfp = this;
+							if (delay && items.length > 1) {
+								timer = setInterval(function () { mfp.next(); }, delay);
+								setTimeout(function () { $(document).on('keydown.galleryauto mousedown.galleryauto touchstart.galleryauto', stop); }, 0);
+							}
+						},
+						imageLoadComplete: function () { this.content.find('img.mfp-img').attr('alt', this.currItem.data.alt); },
+						close: function () { stop(); $card.focus(); }
+					}
+				});
+			}
+			$card.on('click', open).on('keydown', function (e) {
+				if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) { e.preventDefault(); open(); }
+			});
+		});
+	})();
+
 	/* magnificPopup video view */
 	$('.popup-video').magnificPopup({
 		type: 'iframe'
