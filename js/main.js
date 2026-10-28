@@ -76,8 +76,9 @@
 	});
 
 	/* Gallery albums: clicking a card opens every photo in its hidden .gallery-album list as a
-	   slideshow. data-autoplay on the section (milliseconds) advances slides until the visitor
-	   presses a key, clicks, or touches; it is off when the OS asks for reduced motion. */
+	   slideshow. data-autoplay on the section (milliseconds) advances slides once through to the
+	   last photo, or until the visitor presses a key, clicks, or touches; it is off when the OS
+	   asks for reduced motion. */
 	(function () {
 		var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		$('.gallery-item').each(function () {
@@ -107,11 +108,16 @@
 						open: function () {
 							var mfp = this;
 							if (delay && items.length > 1) {
-								timer = setInterval(function () { mfp.next(); }, delay);
+								timer = setInterval(function () { if (mfp.index >= items.length - 1) { stop(); } else { mfp.next(); } }, delay);
 								setTimeout(function () { $(document).on('keydown.galleryauto mousedown.galleryauto touchstart.galleryauto', stop); }, 0);
 							}
 						},
-						imageLoadComplete: function () { this.content.find('img.mfp-img').attr('alt', this.currItem.data.alt); },
+						imageLoadComplete: function () {
+							this.content.find('img.mfp-img').attr('alt', this.currItem.data.alt);
+							var fig = this.content.hasClass('mfp-figure') ? this.content[0] : this.content.find('.mfp-figure')[0];
+							var a = document.createElement('a'); a.href = this.currItem.src; /* absolute URL: the stylesheet would otherwise resolve it relative to css/ */
+							if (fig && fig.style.setProperty) { fig.style.setProperty('--gallery-bg', 'url("' + a.href + '")'); }
+						},
 						close: function () { stop(); $card.focus(); }
 					}
 				});

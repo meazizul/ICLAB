@@ -193,8 +193,9 @@ Find `<!-- videos area start -->`. Copy the `blog-item` block and change the You
    - `gallery-meta` (month and place), `gallery-title` (event name), and the short paragraph,
    - the hidden `<ul class="gallery-album">`: one `<li><a href="img/gallery/<album-name>/01.jpg" data-alt="...">Caption</a></li>` per photo. The caption shows under the photo in the slideshow; write the event, the authors, and what is pictured.
 3. The photo count badge on the cover fills in by itself. Three albums fit per row; a fourth starts a new row automatically.
+4. Phone photos in HEIC format must be converted to JPG first (on a Mac: `sips -s format jpeg IMG_1234.HEIC --out 01.jpg`). Saving through Preview or Photos also strips location data from the file, which is what you want on a public site.
 
-Slideshow behaviour: it slides up when opened, arrows and the keyboard move between photos, Esc closes, and it advances on its own every 3.5 seconds until the visitor interacts. Change the speed with the `data-autoplay` attribute (milliseconds) on the gallery `<div>`, or set it to `0` to turn autoplay off.
+Slideshow behaviour: every photo is shown inside the same fixed frame (letterboxed), so portrait photos and landscape posters look uniform. The frame blooms open from the centre, arrows and the keyboard move between photos, Esc closes, and it advances on its own every 3.5 seconds until it reaches the last photo or the visitor interacts. Change the speed with the `data-autoplay` attribute (milliseconds) on the gallery `<div>`, or set it to `0` to turn autoplay off.
 
 ### 3.8 Edit the About text, Lab Openings, or contact details
 
