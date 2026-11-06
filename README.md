@@ -43,6 +43,7 @@ The page has these sections, in order. Each starts with an HTML comment you can 
 | Videos | `<!-- videos area start -->` | Embedded YouTube talks |
 | Gallery | `<!-- gallery area start -->` | Photo albums (conference trips, lab events) that open as a slideshow |
 | Lab Openings | `<!-- apply area start -->` | Recruiting text and contact details |
+| Footer | `<!-- footer start -->` | Copyright line and the "Built with love by" maintainer credit |
 
 ---
 
@@ -208,7 +209,7 @@ How it behaves: clicking a card blooms open the **album panel**, which shows eve
 
 ### 3.8 Edit the About text, Lab Openings, or contact details
 
-These are ordinary paragraphs. Find the heading (`<h2>About us</h2>` or `<h2>Lab Openings</h2>`) and edit the text inside the `<p>` tags. Office, phone, and email are in the last paragraph of Lab Openings.
+These are ordinary paragraphs. Find the heading (`<h2>About us</h2>` or `<h2>Lab Openings</h2>`) and edit the text inside the `<p>` tags. Office, phone, and email are in the last paragraph of Lab Openings. The copyright year at the very bottom is plain text in the footer (`<!-- footer start -->`); update it each January.
 
 ### 3.9 Change the hero (top of page)
 
@@ -281,4 +282,4 @@ That is the whole process. Everything else is copy, paste, and edit.
 
 ## 8. Credits
 
-Designed and built by Azizul Haque, September 2026.
+Designed and built by Azizul Haque, September 2026. The footer credit ("Built with love by Azizul Haque") links to [azizulhaque.me](https://azizulhaque.me/). A future maintainer who rebuilds the site can change it to their own name and link.

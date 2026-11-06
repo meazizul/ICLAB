@@ -265,3 +265,16 @@ a[name] { display: block; position: relative; top: -70px; visibility: hidden; }
 	.mfp-bloom.mfp-bg, .mfp-bloom .mfp-content, .mfp-gallery-pop .mfp-figure img.mfp-img { transition: none; animation: none; }
 	.gallery-thumb { opacity: 1; transform: none; animation: none; }
 }
+
+/* ---------- Footer: lab line + maintainer credit ---------- */
+.site-footer { background: #0d0e13; border-top: 3px solid #B30C38; color: #9a9ca3; font-size: 13px; letter-spacing: 0.3px; }
+.site-footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding: 22px 0; }
+.site-footer p { margin: 0; color: inherit; font-size: inherit; line-height: 20px; }
+.site-footer-lab { display: inline-flex; align-items: center; gap: 10px; }
+.site-footer-lab img { height: 22px; width: auto; opacity: 0.85; }
+.site-footer-credit a { color: #fff; font-weight: 600; border-bottom: 1px solid rgba(179,12,56,0.7); padding-bottom: 1px; transition: color 0.2s ease, border-color 0.2s ease; }
+.site-footer-credit a:hover, .site-footer-credit a:focus { color: #ff5c86; border-bottom-color: #ff5c86; text-decoration: none; }
+.site-footer-heart { display: inline-block; margin: 0 3px; color: #e0245e; font-size: 15px; vertical-align: -1px; animation: footer-heartbeat 1.6s ease-in-out infinite; }
+@keyframes footer-heartbeat { 0%, 40%, 100% { transform: scale(1); } 10%, 30% { transform: scale(1.22); } 20% { transform: scale(1.05); } }
+@media only screen and (max-width: 767px) { .site-footer-inner { flex-direction: column; text-align: center; } }
+@media (prefers-reduced-motion: reduce) { .site-footer-heart { animation: none; } }
