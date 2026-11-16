@@ -23,7 +23,7 @@
 	/* meanmenu */
 	 $('#mobile-nav').meanmenu({
 		 meanMenuContainer: '.basic-mobile-menu',
-		 meanScreenWidth: "767"
+		 meanScreenWidth: "991"
 	 });
 
 	/* hamburgers menu option  */

@@ -432,3 +432,82 @@ a.person-card:hover .person-card-title { color: #B30C38; }
 .news-more { margin-top: 2px; padding: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; color: #B30C38; background: none; border: 0; cursor: pointer; }
 .news-more:hover, .news-more:focus { text-decoration: underline; outline: none; }
 .news-list .news-item.is-clamped { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* =====================================================================
+   Responsive fixes (tablets, half-width windows, phones)
+   ===================================================================== */
+
+/* Header, 992-1199px: keep the full menu on one row next to the logo */
+@media (min-width: 992px) and (max-width: 1199px) {
+	#sticky-header .basic-menu li { margin-left: 17px; }
+	#sticky-header .basic-menu li a { letter-spacing: 0.5px; }
+	#sticky-header .logo .site-logo span { font-size: 16px; }
+}
+
+/* Header, 768-991px (tablets, a half-width browser): use the phone menu (hamburger) */
+@media (min-width: 768px) and (max-width: 991px) {
+	#sticky-header .header-area .row > div { float: none; width: 100%; }
+	#sticky-header .logo.hidden-xs, #sticky-header .menu-area.hidden-xs { display: none !important; }
+	#sticky-header .mobile-logo.visible-xs, #sticky-header .basic-mobile-menu.visible-xs { display: block !important; }
+	.sticky .mean-container a.meanmenu-reveal { margin-top: -46px; }
+}
+
+/* The mobile menu panel: full width, readable, and never taller than the screen */
+@media (max-width: 991px) {
+	.mean-container .mean-nav { max-height: calc(100vh - 70px); overflow-y: auto; }
+	.mean-container .mean-nav ul li a { font-size: 13px; letter-spacing: 1px; }
+}
+
+/* Our Team on phones: two people per row instead of one full-screen photo each */
+@media (max-width: 767px) {
+	.basic-team-area .row { display: flex; flex-wrap: wrap; }
+	.basic-team-area .row::before, .basic-team-area .row::after { display: none; }
+	.basic-team-area .row > [class*="col-"] { width: 50%; padding-left: 8px; padding-right: 8px; }
+	.basic-team-area .team-item { margin-bottom: 22px; }
+	.basic-team-area .team-item-image { margin-bottom: 10px; border-radius: 4px; }
+	.basic-team-area .team-item-name { font-size: 13px; letter-spacing: 1px; line-height: 18px; margin: 0 0 4px; }
+	.basic-team-area .team-item-role { font-size: 11px; letter-spacing: 0.3px; line-height: 15px; }
+	.basic-team-area .team-item-detail { padding: 8px; }
+	.basic-team-area .team-item-title { font-size: 13px; letter-spacing: 1px; line-height: 18px; }
+	.basic-team-area .team-profile-cta { margin-bottom: 6px; font-size: 10px; }
+	.basic-team-area .team-social-icon a { width: 28px; height: 28px; line-height: 27px; font-size: 13px; margin: 0 2px 4px; }
+}
+
+/* Profile page on phones: a compact header card (small photo beside the name) */
+@media only screen and (max-width: 600px) {
+	.person-page { padding-top: 84px; }
+	.person-head { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 4px 14px; text-align: left; align-items: center; }
+	.person-photo { grid-row: 1 / span 2; }
+	.person-photo img { width: 88px; height: 88px; margin: 0; }
+	.person-main { display: contents; }
+	.person-name { grid-column: 2; margin: 0; font-size: 22px; }
+	.person-role { grid-column: 2; font-size: 14px; line-height: 19px; }
+	.person-affil { grid-column: 1 / -1; margin: 8px 0 4px; font-size: 13px; }
+	.person-links { grid-column: 1 / -1; justify-content: flex-start; gap: 4px 14px; margin-bottom: 8px; }
+	.person-links a { font-size: 13px; }
+	.person-bio, .person-bio-more { grid-column: 1 / -1; }
+	.person-bio p { font-size: 14px; line-height: 22px; }
+	.person-bio-more { justify-self: start; margin-top: 4px; }
+	.person-news { grid-column: 1 / -1; }
+	.person-news h3 { margin-top: 14px; font-size: 16px; }
+	.person-stats { gap: 6px; margin-top: 18px; }
+	.person-stats li { min-width: 0; flex: 1 1 calc(33.333% - 6px); padding: 6px 4px; }
+	.person-stats strong { font-size: 18px; line-height: 22px; }
+	.person-stats span { font-size: 9.5px; letter-spacing: 0.5px; }
+	.person-tabs-links { justify-content: space-between; gap: 0 10px; }
+	.person-tabs a { font-size: 13px; padding: 10px 0 8px; }
+	.person-section { padding-top: 26px; }
+	.person-section-title { font-size: 18px; margin-bottom: 16px; }
+}
+
+/* Phone/tablet header over the dark hero: white logo text and menu icon (dark again once the header turns white) */
+.header-transparent:not(.sticky) .mobile-logo h4,
+.header-transparent:not(.sticky) .mobile-logo .site-logo { color: #fff; }
+.header-transparent:not(.sticky) .mean-container a.meanmenu-reveal { border-color: rgba(255,255,255,0.75); color: #fff; }
+.header-transparent:not(.sticky) .mean-container a.meanmenu-reveal span { background: #fff; }
+@media only screen and (max-width: 600px) {
+	.person-grid-4.person-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+	.person-grid-4 .person-card-title { font-size: 13.5px; line-height: 18px; }
+	.person-grid-4 .person-card-meta { font-size: 11.5px; }
+	.talk-card .person-card-links .pub-btn { padding: 1px 7px; }
+}
