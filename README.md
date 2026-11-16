@@ -18,12 +18,16 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 ```
 (repository root)
 ├── index.html          ← THE ENTIRE SITE. 95% of edits happen in this one file.
+├── person.html         Profile page for each team member (person.html?id=firstname-lastname). Filled in automatically.
+├── js/lab-data.js      Profile extras: bios, projects, and talks (see 3.10).
+├── js/person.js        Builds the profile pages from index.html + js/lab-data.js. No need to edit.
 ├── style.css           Template stylesheet. Do not edit. Override in css/custom.css instead.
 ├── css/custom.css      Our style overrides (hero, publication list, gallery, news, footer).
 ├── js/main.js          Menu, publication filters/year menu/Cite popup, gallery, and the hero animations.
 ├── css/, fonts/, js/   Template libraries (Bootstrap 3, Ionicons, Magnific Popup). Leave as they are.
 ├── img/team/           One portrait per person, 600×820 px JPG, named firstname-lastname.jpg
 ├── img/papers/         First-page thumbnail per paper, 240×310 px JPG, named <firstauthor><year><word>.jpg
+├── img/projects/       Project card images for the profile pages, 640×400 px JPG
 ├── img/class/          Course card images, 1500×460 px
 ├── img/gallery/        One folder per album: cover.jpg (900×562), photos 01.jpg, 02.jpg, … and thumbnails 01-thumb.jpg, …
 ├── img/logo/           Lab logo: icl-mark.png (icon), icl-logo-dark.png, icl-logo-white.png
@@ -104,11 +108,13 @@ Clicking it scrolls to the Gallery and opens that album. Link paper titles in th
 
 ```html
 <div class="col-sm-6 col-md-3">
-    <div class="team-item">
+    <div class="team-item" data-person="firstname-lastname">
         <div class="team-item-image">
             <img src="img/team/firstname-lastname.jpg" alt="Headshot of Full Name">
+            <a class="team-profile-link" href="person.html?id=firstname-lastname" aria-label="View Full Name&rsquo;s profile"></a>
             <div class="team-item-detail">
                 <h5 class="team-item-title">Full Name</h5>
+                <span class="team-profile-cta">View profile <i class="ion-arrow-right-c" aria-hidden="true"></i></span>
                 <div class="team-social-icon">
                     <a href="https://personal-site.example" aria-label="Full Name website"><i class="ion-link"></i></a>
                     <a href="mailto:name@stevens.edu" aria-label="Full Name email"><i class="ion-email"></i></a>
@@ -116,13 +122,15 @@ Clicking it scrolls to the Gallery and opens that album. Link paper titles in th
                 </div>
             </div>
         </div>
-        <h4 class="team-item-name">Full Name</h4>
+        <h4 class="team-item-name"><a href="person.html?id=firstname-lastname">Full Name</a></h4>
         <span class="team-item-role">Ph.D. Student, Computer Science</span>
     </div>
 </div>
 ```
 
-Delete any `<a>` link lines you do not need. Available icons: `ion-link` (website), `ion-email`, `ion-social-linkedin`, `ion-social-github`, `ion-social-twitter`, `ion-university` (Google Scholar).
+Use the photo's file name (without `.jpg`) as the id in all three places: `data-person`, and the two `person.html?id=` links. That gives the person a profile page automatically (see 3.10).
+
+Delete any social `<a>` link lines you do not need. Available icons: `ion-link` (website), `ion-email`, `ion-social-linkedin`, `ion-social-github`, `ion-social-twitter`, `ion-university` (Google Scholar).
 
 If a row already has four people, start a new `<div class="row">` ... `</div>` after it.
 
@@ -145,7 +153,7 @@ The list works like the [Makeability Lab publications page](https://makeabilityl
 2. Find the year section, for example `<!-- ===== 2027 ===== -->`, and paste a new row **at the top** of it (newest first):
 
 ```html
-<article class="pub" data-tags="access paper">
+<article class="pub" id="pub-smith2027glasses" data-tags="access paper">
     <a class="pub-thumb" href="https://dl.acm.org/doi/pdf/10.1145/XXXXXXX" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
         <img src="img/papers/smith2027glasses.jpg" alt="" width="240" height="310" loading="lazy">
     </a>
@@ -172,6 +180,7 @@ The list works like the [Makeability Lab publications page](https://makeabilityl
 
    - **PDF link:** for ACM papers use `https://dl.acm.org/doi/pdf/<DOI>` (the ACM Digital Library is open access). For other publishers, link the open-access PDF or Dr. Hong's copy on `jonggi.github.io/papers/`. The thumbnail, the title, and the PDF button all use this link.
    - **BibTeX:** get it from the paper's ACM page (Export Citation → BibTeX), or run `curl -LH "Accept: application/x-bibtex" https://doi.org/<DOI>` and tidy it up. Keep the `<pre ...>` and `</pre>` on the same lines as the first and last BibTeX lines. If the BibTeX contains `&`, `<` or `>`, write them as `&amp;`, `&lt;`, `&gt;`.
+   - **id:** `pub-` plus the thumbnail name, for example `id="pub-smith2027glasses"`. Projects on the profile pages refer to papers by this id.
    - **Venue line:** `Proceedings of CHI 2027`, `Poster Proceedings of ASSETS 2027`, `Extended Abstracts of CHI 2027`, or the journal name. No acceptance rates.
 
 3. Set the **filter tags** in `data-tags`, separated by spaces. Pick every one that applies:
@@ -221,7 +230,7 @@ Find `<h2>Classes Taught by Dr. Hong</h2>`. Copy one `<div class="col-sm-6 col-m
 
 ### 3.6 Add a video
 
-Find `<!-- videos area start -->`. Copy the `blog-item` block and change the YouTube ID in the `data-src` URL (`https://www.youtube.com/embed/VIDEO_ID`), the author, title, description, and link. Two videos fit per row; the single existing block is centred with `col-sm-offset-2`, so remove the two `offset` classes when you add a second one.
+Find `<!-- videos area start -->`. Copy the `blog-item` block and change the YouTube ID in the `data-src` URL (`https://www.youtube.com/embed/VIDEO_ID`), the author, title, description, and link. Keep the author line as `By <a ...>Full Name</a>, Venue`: the name there is how the video shows up on that person's profile page. Two videos fit per row; the single existing block is centred with `col-sm-offset-2`, so remove the two `offset` classes when you add a second one.
 
 ### 3.7 Add a photo album to the Gallery
 
@@ -255,6 +264,35 @@ The rotation is: network animation → video → wave animation → video → re
 
 The title and tagline are the `<h1>` and `<p class="lead">` right below.
 
+### 3.10 Profile pages (people, projects, talks)
+
+Every team member and alumnus has a profile page in the style of the Makeability Lab member pages: photo, role, links, a short bio, their recent news, a row of contribution counts (papers, first-author papers, awards, projects, talks, videos), and sections for **Projects, Papers, Videos, and Talks**. Clicking a photo or name in Our Team opens it, for example `person.html?id=azizul-haque`.
+
+Most of it fills in **by itself** from `index.html`:
+
+| On the profile | Comes from |
+|---|---|
+| Name, role, photo, links | The person's card in Our Team / Alumni |
+| Papers (and the first-author and award counts) | The Publications list, wherever the person's name is in the author line |
+| Videos | The Videos section, wherever the name is in the `By ...` line |
+| Recent news | The Recent News lines that mention the name |
+
+So adding a paper, a video, or a news line on `index.html` updates every profile automatically. Three things live in `js/lab-data.js` instead:
+
+- **Bio.** Under `people`, add an entry keyed by the person's id. Without one, the page writes a short line from the role and their papers.
+
+  ```js
+  'jiayin-huang': { bio: 'Jiayin Huang is a Ph.D. student ...' },
+  ```
+
+  If a name is written differently in papers (a middle name, an old spelling), add it to `aliases`, for example `aliases: ['Nicholas Michael Russo']`.
+
+- **Projects.** Each project lists its paper ids (`pub-...` without `pub-`). Everyone who authored one of those papers gets the project on their profile. Copy an entry and change the title, years, one-line summary, papers, link, and a 640 × 400 px image in `img/projects/`.
+
+- **Talks.** Newest first. `people` lists who presented, `type` is `Talk` or `Poster`, and `links` can have `paper`, `slides`, `video`, and `photos` (for example `index.html#gallery-dis2026`).
+
+Preview profile pages through the local server in Option B (`python3 -m http.server`). Opened as a plain file, the page cannot read `index.html` and shows "Profile unavailable".
+
 ---
 
 ## 4. Image guidelines
@@ -263,6 +301,7 @@ The title and tagline are the `<h1>` and `<p class="lead">` right below.
 |---|---|---|---|
 | Team portrait | 600 × 820 px (3:4 portrait) | JPG, under 200 KB | `img/team/` |
 | Paper thumbnail (first page) | 240 × 310 px (portrait) | JPG, under 40 KB | `img/papers/` |
+| Project card | 640 × 400 px | JPG, under 40 KB | `img/projects/` |
 | Class card | 1500 × 460 px | JPG | `img/class/` |
 | Gallery cover | 900 × 562 px (16:10) | JPG, under 150 KB | `img/gallery/<album>/cover.jpg` |
 | Gallery photo | longest side 1600 px | JPG, under 500 KB | `img/gallery/<album>/01.jpg` … |
@@ -292,6 +331,10 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 **A paper does not show up under a filter.** Its `data-tags` is missing that tag, or has a typo. Tags are separated by spaces.
 
 **A year is missing from the year menu, or clicking it does nothing.** The year needs both a `<nav class="pub-years">` link with `href="#pubs-2027"` and a section with `<a name="pubs-2027"></a>`; the two numbers must match.
+
+**A profile says "Profile unavailable".** It was opened as a file. Use `python3 -m http.server` (Option B), or check it on the live site.
+
+**A paper is missing from someone's profile.** Their name in the paper's author line is spelled differently from their team card. Add that spelling to `aliases` in `js/lab-data.js`.
 
 **The Cite popup shows strange characters.** The BibTeX inside `<pre class="pub-bibtex">` contains a raw `&`, `<` or `>`. Write them as `&amp;`, `&lt;`, `&gt;`.
 

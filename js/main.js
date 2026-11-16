@@ -78,30 +78,128 @@
 			(window.requestAnimationFrame || setTimeout)(function () { ticking = false; updateActiveYear(); });
 		});
 		updateActiveYear();
+	})();
 
-		$area.on('click', '.pub-cite', function () {
-			var $pub = $(this).closest('.pub');
-			var $panel = $('<div class="cite-panel" role="dialog" aria-label="Cite this paper">' +
-				'<h4>Cite this paper</h4><p class="cite-title"></p><pre class="cite-bib"></pre>' +
-				'<button type="button" class="pub-btn cite-copy"><i class="ion-clipboard" aria-hidden="true"></i> Copy BibTeX</button></div>');
-			$panel.find('.cite-title').text($.trim($pub.find('.pub-title').text()));
-			$panel.find('.cite-bib').text($pub.find('.pub-bibtex').text());
-			$.magnificPopup.open({ items: { src: $panel, type: 'inline' }, mainClass: 'mfp-bloom mfp-cite-pop', removalDelay: 340, closeBtnInside: true });
+	/*----------------------------
+	Cite popover (Makeability Lab style): a small box next to the Cite button with a
+	Text / BibTeX switch, Download and Copy. The BibTeX lives in each row's hidden
+	<pre class="pub-bibtex">; the text citation is built from it.
+	------------------------------ */
+	(function () {
+		var $pop = null, $btn = null;
+
+		function initials(first) {
+			return $.trim(first).split(/\s+/).map(function (w) {
+				return w.split('-').map(function (x) { return x.charAt(0).toUpperCase() + '.'; }).join('-');
+			}).join(' ');
+		}
+		function bibFields(bib) {
+			var f = {};
+			bib.replace(/^\s*(\w+)\s*=\s*\{(.*)\},?\s*$/gm, function (m, k, v) { f[k.toLowerCase()] = v; return m; });
+			return f;
+		}
+		function citation($pub) {
+			var bib = $pub.find('.pub-bibtex').text(), f = bibFields(bib);
+			var authors = (f.author || '').split(/\s+and\s+/).map(function (a) {
+				var parts = a.split(',').map($.trim);
+				if (parts.length === 3) return parts[0] + ' ' + parts[1] + ', ' + initials(parts[2]);
+				if (parts.length === 2) return parts[0] + ', ' + initials(parts[1]);
+				return $.trim(a);
+			}).filter(Boolean).join(', ');
+			var title = f.title || $.trim($pub.find('.pub-title').text());
+			var link = f.doi ? 'https://doi.org/' + f.doi : $pub.find('.pub-title a').attr('href');
+			return { bib: bib, authors: authors, year: f.year || '', title: title, end: /[?!.]$/.test(title) ? '' : '.',
+				venue: $.trim($pub.find('.pub-venue em').first().text()), link: link || '' };
+		}
+		function esc(s) { return $('<div>').text(s).html(); }
+
+		function close(focusBack) {
+			if (!$pop) return;
+			$pop.remove(); $pop = null;
+			if ($btn) { $btn.attr('aria-expanded', 'false'); if (focusBack) $btn.focus(); }
+			$btn = null;
+			$(document).off('.citepop'); $(window).off('.citepop');
+		}
+
+		function place() {
+			if (!$pop || !$btn) return;
+			var b = $btn.offset(), bw = $btn.outerWidth(), bh = $btn.outerHeight();
+			var pw = $pop.outerWidth(), ph = $pop.outerHeight(), ww = $(window).width(), st = $(window).scrollTop();
+			var top, left, side;
+			if (b.left + bw + 12 + pw <= ww - 10) {
+				side = 'right'; left = b.left + bw + 12;
+				top = Math.max(st + 80, b.top + bh / 2 - ph / 2);
+			} else {
+				side = 'bottom'; top = b.top + bh + 10;
+				left = Math.min(Math.max(10, b.left + bw / 2 - pw / 2), ww - pw - 10);
+			}
+			$pop.removeClass('cite-pop-right cite-pop-bottom').addClass('cite-pop-' + side).css({ top: top, left: left });
+			var $arrow = $pop.find('.cite-pop-arrow');
+			if (side === 'right') $arrow.css({ top: Math.min(ph - 18, Math.max(12, b.top + bh / 2 - top - 7)), left: '' });
+			else $arrow.css({ left: Math.min(pw - 18, Math.max(12, b.left + bw / 2 - left - 7)), top: '' });
+		}
+
+		$(document).on('click', '.pub-cite', function (e) {
+			e.stopPropagation();
+			var $b = $(this);
+			if ($btn && $btn[0] === this) { close(false); return; }
+			close(false);
+			var $pub = $b.closest('.pub'), c = citation($pub);
+			var slug = ($pub.attr('id') || $pub.find('.pub-thumb img').attr('src') || 'citation').replace(/^pub-/, '').replace(/^.*\/|\.jpg$/g, '');
+			var text = c.authors + ' (' + c.year + '). ' + c.title + c.end + ' ' + c.venue + '.' + (c.link ? ' ' + c.link : '');
+			$pop = $('<div class="cite-pop" role="dialog" aria-label="Citation">' +
+				'<div class="cite-pop-head">Citation</div>' +
+				'<div class="cite-pop-body">' +
+				'<div class="cite-tabs" role="tablist"><button type="button" role="tab" class="active" aria-selected="true" data-tab="text">Text</button>' +
+				'<button type="button" role="tab" aria-selected="false" data-tab="bibtex">BibTeX</button></div>' +
+				'<div class="cite-box cite-text">' + esc(c.authors) + ' (' + esc(c.year) + '). ' + esc(c.title + c.end) + ' <em>' + esc(c.venue) + '</em>.' +
+				(c.link ? ' <a href="' + esc(c.link) + '" target="_blank" rel="noopener">' + esc(c.link) + '</a>' : '') + '</div>' +
+				'<pre class="cite-box cite-bib" hidden></pre>' +
+				'<div class="cite-actions"><button type="button" class="cite-act cite-dl"><i class="ion-ios-download-outline" aria-hidden="true"></i> Download</button>' +
+				'<button type="button" class="cite-act cite-copy"><i class="ion-ios-copy-outline" aria-hidden="true"></i> Copy</button></div>' +
+				'</div><span class="cite-pop-arrow" aria-hidden="true"></span></div>');
+			$pop.find('.cite-bib').text(c.bib);
+			$pop.data({ text: text, bib: c.bib, slug: slug });
+			$('body').append($pop);
+			$btn = $b.attr('aria-expanded', 'true');
+			place();
+			$pop.find('.cite-tabs .active').focus();
+			$(document).on('click.citepop', function (ev) { if ($pop && !$(ev.target).closest('.cite-pop').length) close(false); })
+				.on('keydown.citepop', function (ev) { if (ev.key === 'Escape' || ev.keyCode === 27) close(true); });
+			$(window).on('resize.citepop', place);
 		});
 
+		$(document).on('click', '.cite-tabs button', function () {
+			var tab = $(this).data('tab');
+			$(this).addClass('active').attr('aria-selected', 'true').siblings().removeClass('active').attr('aria-selected', 'false');
+			$pop.find('.cite-text').prop('hidden', tab !== 'text');
+			$pop.find('.cite-bib').prop('hidden', tab !== 'bibtex');
+			place();
+		});
+
+		function current() { var bib = !$pop.find('.cite-bib').prop('hidden'); return { bib: bib, value: bib ? $pop.data('bib') : $pop.data('text') }; }
+
 		$(document).on('click', '.cite-copy', function () {
-			var $btn = $(this), pre = $btn.siblings('.cite-bib')[0];
+			var $b = $(this), cur = current();
 			function done() {
-				$btn.html('<i class="ion-checkmark" aria-hidden="true"></i> Copied');
-				setTimeout(function () { $btn.html('<i class="ion-clipboard" aria-hidden="true"></i> Copy BibTeX'); }, 1800);
+				$b.html('<i class="ion-checkmark" aria-hidden="true"></i> Copied');
+				setTimeout(function () { $b.html('<i class="ion-ios-copy-outline" aria-hidden="true"></i> Copy'); }, 1600);
 			}
-			if (navigator.clipboard && window.isSecureContext) {
-				navigator.clipboard.writeText(pre.textContent).then(done);
-			} else {
-				var range = document.createRange(), sel = window.getSelection();
-				range.selectNodeContents(pre); sel.removeAllRanges(); sel.addRange(range);
-				try { document.execCommand('copy'); done(); } catch (e) {}
-			}
+			if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(cur.value).then(done); return; }
+			var $t = $('<textarea readonly>').val(cur.value).css({ position: 'fixed', left: '-9999px' }).appendTo('body');
+			$t[0].select();
+			try { document.execCommand('copy'); done(); } catch (e) {}
+			$t.remove();
+		});
+
+		$(document).on('click', '.cite-dl', function () {
+			var cur = current();
+			var blob = new Blob([cur.value + '\n'], { type: cur.bib ? 'application/x-bibtex' : 'text/plain' });
+			var a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = $pop.data('slug') + (cur.bib ? '.bib' : '.txt');
+			document.body.appendChild(a); a.click(); a.remove();
+			setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
 		});
 	})();
 
@@ -463,6 +561,8 @@
 			}
 		};
 	}
+
+	if (!$hero.length) return; // pages without the hero (person.html)
 
 	/* layers + rotation: network (A) -> video -> waves (B) -> video -> ... ; video slots are skipped until YouTube is playing */
 	var $wrap = $('<div class="hero-slides"></div>');
