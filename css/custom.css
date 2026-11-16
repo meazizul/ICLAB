@@ -7,12 +7,6 @@
 .hero-caption { display: table; height: 100%; width: 100%; }
 .hero-caption .slider-content { display: table-cell; vertical-align: middle; }
 
-/* Author line under each publication title */
-.pub-authors { display: block; color: #999; font-size: 12px; letter-spacing: 0.5px; margin-top: 6px; line-height: 18px; }
-
-/* Ribbon holder needs relative positioning inside the thumb */
-.ribbon-holder { z-index: 5; }
-
 /* Slightly narrower "about" intro on very large screens */
 .bio p { text-align: left; }
 
@@ -21,9 +15,6 @@ a[name] { display: block; position: relative; top: -70px; visibility: hidden; }
 
 /* Team placeholder silhouettes look softer */
 .team-item-image img { background: #dfdfdf; }
-
-/* Even card heights in the publication grid */
-.portfolio-caption.caption-border { min-height: 190px; }
 
 /* Template pulls the hero caption up on phones; our table-cell centering makes that unnecessary */
 @media only screen and (max-width: 767px) { .hero-caption { margin-top: 0; } }
@@ -278,3 +269,56 @@ a[name] { display: block; position: relative; top: -70px; visibility: hidden; }
 @keyframes footer-heartbeat { 0%, 40%, 100% { transform: scale(1); } 10%, 30% { transform: scale(1.22); } 20% { transform: scale(1.05); } }
 @media only screen and (max-width: 767px) { .site-footer-inner { flex-direction: column; text-align: center; } }
 @media (prefers-reduced-motion: reduce) { .site-footer-heart { animation: none; } }
+
+/* ---------- Publications: year-grouped list (Makeability Lab style) ---------- */
+.pub-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 34px; }
+.pub-filter { padding: 6px 14px; font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; color: #555; background: #fff; border: 1px solid #d9d9dd; border-radius: 16px; cursor: pointer; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+.pub-filter:hover, .pub-filter:focus { border-color: #B30C38; color: #B30C38; outline: none; }
+.pub-filter.active { background: #B30C38; border-color: #B30C38; color: #fff; }
+.pub-filter-count { opacity: 0.75; }
+
+.pub-layout { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 36px; text-align: left; }
+.pub-years { position: sticky; top: 96px; align-self: start; display: flex; flex-direction: column; border-left: 2px solid #e6e6ea; }
+.pub-years a { display: block; margin-left: -2px; padding: 3px 0 3px 14px; font-size: 13px; line-height: 18px; color: #8b8d94; border-left: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
+.pub-years a:hover, .pub-years a:focus { color: #B30C38; text-decoration: none; }
+.pub-years a.active { color: #B30C38; font-weight: 700; border-left-color: #B30C38; }
+.pub-years a.is-empty, .pub-year.is-empty, .pub.is-hidden { display: none; }
+
+.pub-year { margin-bottom: 18px; }
+.pub-year-title { margin: 0 0 20px; font-size: 30px; font-weight: 300; line-height: 1; color: #2b2b2f; letter-spacing: 0.5px; }
+.pub { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 26px; }
+.pub-thumb { position: relative; flex: 0 0 92px; width: 92px; height: 119px; overflow: hidden; background: #fff; border: 1px solid #d6d7db; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.pub-thumb img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.pub-thumb:hover, .pub-thumb:focus { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.16); }
+.pub-ribbon { position: absolute; top: 9px; left: -24px; width: 84px; padding: 2px 0; transform: rotate(-45deg); background: #B30C38; color: #fff; font-size: 9px; font-weight: 700; line-height: 12px; letter-spacing: 1px; text-align: center; text-transform: uppercase; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+.pub-body { min-width: 0; padding-top: 1px; }
+.pub-title { margin: 0 0 4px; font-size: 16px; font-weight: 600; line-height: 22px; letter-spacing: 0; text-transform: none; }
+.pub-title a { color: #1f2a44; }
+.pub-title a:hover, .pub-title a:focus { color: #B30C38; text-decoration: none; }
+.pub-authors { margin: 0 0 2px; font-size: 13px; line-height: 19px; color: #4a4c52; }
+.pub-venue { margin: 0 0 8px; font-size: 13px; line-height: 19px; color: #6b6d74; }
+.pub-award { margin-left: 4px; color: #B30C38; font-weight: 600; white-space: nowrap; }
+.pub-award i { margin-right: 2px; }
+.pub-links { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pub-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; font-size: 11px; line-height: 18px; letter-spacing: 0.3px; color: #3a4a6b !important; background: #f2f3f6; border: 1px solid #e2e4ea; border-radius: 12px; cursor: pointer; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+.pub-btn:hover, .pub-btn:focus { background: #B30C38; border-color: #B30C38; color: #fff !important; text-decoration: none; outline: none; }
+
+/* Cite popup */
+.cite-panel { position: relative; max-width: 720px; margin: 20px auto; padding: 26px 26px 22px; background: #fff; border-radius: 8px; text-align: left; box-shadow: 0 18px 50px rgba(0,0,0,0.35); }
+.cite-panel h4 { margin: 0 0 4px; font-size: 18px; color: #1f2a44; }
+.cite-title { margin: 0 0 14px; font-size: 13px; color: #6b6d74; }
+.cite-bib { max-height: 50vh; overflow: auto; margin: 0 0 14px; padding: 14px 16px; font-size: 12px; line-height: 18px; color: #2b2b2f; white-space: pre-wrap; word-break: break-word; background: #f7f7f9; border: 1px solid #e6e6ea; border-radius: 6px; }
+.cite-panel .mfp-close { color: #555; }
+.cite-copy { font-size: 12px; padding: 4px 14px; }
+
+@media only screen and (max-width: 767px) {
+	.pub-layout { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+	.pub-years { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px 6px; border-left: 0; padding-bottom: 10px; border-bottom: 1px solid #e6e6ea; }
+	.pub-years a { margin-left: 0; padding: 2px 9px; border: 1px solid #e2e4ea; border-radius: 12px; }
+	.pub-years a.active { border-color: #B30C38; }
+	.pub { gap: 14px; }
+	.pub-thumb { flex-basis: 70px; width: 70px; height: 91px; }
+	.pub-title { font-size: 15px; line-height: 20px; }
+	.pub-year-title { font-size: 26px; margin-top: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .pub-thumb, .pub-thumb:hover { transition: none; transform: none; } }

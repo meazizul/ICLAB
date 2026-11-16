@@ -32,40 +32,78 @@
         $(this).next().toggleClass('nav-menu-show')
     });
 
-	/* imagesLoaded active */
-	$('#portfolio-grid,.blog-masonry').imagesLoaded( function() {
+	/*----------------------------
+	Publications: year-grouped list (Makeability Lab style).
+	- Filter buttons count their papers and hide the rest (empty years hide too).
+	- The year menu on the left highlights the year you are reading.
+	- "Cite" opens the paper's BibTeX (stored in a hidden <pre class="pub-bibtex">) with a copy button.
+	------------------------------ */
+	(function () {
+		var $area = $('.pub-area');
+		if (!$area.length) return;
+		var $pubs = $area.find('.pub'), $years = $area.find('.pub-year'), $nav = $area.find('.pub-years a');
 
-		/* Filter menu */
-		$('.filter-menu').on( 'click', 'button', function() {
-		  var filterValue = $(this).attr('data-filter');
-		  $grid.isotope({ filter: filterValue });
+		function hasTag($el, f) { return f === '*' || (' ' + $el.attr('data-tags') + ' ').indexOf(' ' + f + ' ') > -1; }
+
+		$area.find('.pub-filter').each(function () {
+			var f = $(this).attr('data-filter');
+			var n = $pubs.filter(function () { return hasTag($(this), f); }).length;
+			$(this).find('.pub-filter-count').text('(' + n + ')');
 		});
 
-		/* filter menu active class  */
-		$('.filter-menu button').on('click', function(event) {
-			$(this).siblings('.active').removeClass('active');
-			$(this).addClass('active');
-			event.preventDefault();
+		function updateActiveYear() {
+			var line = $(window).scrollTop() + 160, current = null, $visible = $years.not('.is-empty');
+			$visible.each(function () { if ($(this).offset().top <= line) current = $(this).attr('data-year'); });
+			if (current === null) current = $visible.first().attr('data-year');
+			$nav.removeClass('active').filter('[data-year="' + current + '"]').addClass('active');
+		}
+
+		$area.on('click', '.pub-filter', function () {
+			var f = $(this).attr('data-filter');
+			$area.find('.pub-filter').removeClass('active').attr('aria-pressed', 'false');
+			$(this).addClass('active').attr('aria-pressed', 'true');
+			$pubs.each(function () { $(this).toggleClass('is-hidden', !hasTag($(this), f)); });
+			$years.each(function () {
+				var empty = !$(this).find('.pub').not('.is-hidden').length;
+				$(this).toggleClass('is-empty', empty);
+				$nav.filter('[data-year="' + $(this).attr('data-year') + '"]').toggleClass('is-empty', empty);
+			});
+			updateActiveYear();
 		});
 
-		/* Filter active */
-		var $grid = $('#portfolio-grid').isotope({
-		  itemSelector: '.portfolio-item',
-		  percentPosition: true,
-		  masonry: {
-			columnWidth: '.portfolio-item',
-		  }
+		var ticking = false;
+		$(window).on('scroll resize', function () {
+			if (ticking) return;
+			ticking = true;
+			(window.requestAnimationFrame || setTimeout)(function () { ticking = false; updateActiveYear(); });
+		});
+		updateActiveYear();
+
+		$area.on('click', '.pub-cite', function () {
+			var $pub = $(this).closest('.pub');
+			var $panel = $('<div class="cite-panel" role="dialog" aria-label="Cite this paper">' +
+				'<h4>Cite this paper</h4><p class="cite-title"></p><pre class="cite-bib"></pre>' +
+				'<button type="button" class="pub-btn cite-copy"><i class="ion-clipboard" aria-hidden="true"></i> Copy BibTeX</button></div>');
+			$panel.find('.cite-title').text($.trim($pub.find('.pub-title').text()));
+			$panel.find('.cite-bib').text($pub.find('.pub-bibtex').text());
+			$.magnificPopup.open({ items: { src: $panel, type: 'inline' }, mainClass: 'mfp-bloom mfp-cite-pop', removalDelay: 340, closeBtnInside: true });
 		});
 
-		$('.blog-masonry').isotope({
-		  itemSelector: '.blog-item',
-		  percentPosition: true,
-		  masonry: {
-			columnWidth: '.blog-item',
-		  }
+		$(document).on('click', '.cite-copy', function () {
+			var $btn = $(this), pre = $btn.siblings('.cite-bib')[0];
+			function done() {
+				$btn.html('<i class="ion-checkmark" aria-hidden="true"></i> Copied');
+				setTimeout(function () { $btn.html('<i class="ion-clipboard" aria-hidden="true"></i> Copy BibTeX'); }, 1800);
+			}
+			if (navigator.clipboard && window.isSecureContext) {
+				navigator.clipboard.writeText(pre.textContent).then(done);
+			} else {
+				var range = document.createRange(), sel = window.getSelection();
+				range.selectNodeContents(pre); sel.removeAllRanges(); sel.addRange(range);
+				try { document.execCommand('copy'); done(); } catch (e) {}
+			}
 		});
-
-	});
+	})();
 
 	/* magnificPopup img view */
 	$('.popup-link').magnificPopup({

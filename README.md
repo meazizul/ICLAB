@@ -19,11 +19,11 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 (repository root)
 ├── index.html          ← THE ENTIRE SITE. 95% of edits happen in this one file.
 ├── style.css           Template stylesheet. Do not edit. Override in css/custom.css instead.
-├── css/custom.css      Our small set of style overrides (hero, publication cards).
-├── js/main.js          Menu, publication filters, and the two hero animations.
-├── css/, fonts/, js/   Template libraries (Bootstrap 3, Ionicons, Isotope). Leave as they are.
+├── css/custom.css      Our style overrides (hero, publication list, gallery, news, footer).
+├── js/main.js          Menu, publication filters/year menu/Cite popup, gallery, and the hero animations.
+├── css/, fonts/, js/   Template libraries (Bootstrap 3, Ionicons, Magnific Popup). Leave as they are.
 ├── img/team/           One portrait per person, 600×820 px JPG, named firstname-lastname.jpg
-├── img/portfolio/      One square thumbnail per paper, 600×600 px JPG, named project-<id>.jpg
+├── img/papers/         First-page thumbnail per paper, 240×310 px JPG, named <firstauthor><year><word>.jpg
 ├── img/class/          Course card images, 1500×460 px
 ├── img/gallery/        One folder per album: cover.jpg (900×562), photos 01.jpg, 02.jpg, … and thumbnails 01-thumb.jpg, …
 ├── img/logo/           Lab logo: icl-mark.png (icon), icl-logo-dark.png, icl-logo-white.png
@@ -38,7 +38,7 @@ The page has these sections, in order. Each starts with an HTML comment you can 
 | Hero | `<!-- basic-slider start -->` | Lab name, tagline, animated background, optional video |
 | About us + Recent News | `<!-- about-us area start -->` | Lab description (left) and dated news items (right) |
 | Our Team + Alumni | `<!-- team area start -->` | Photo cards, four per row |
-| Publications | `<!-- basic-portfolio-area start -->` | Filter buttons and one card per paper |
+| Publications | `<!-- basic-portfolio-area start -->` | Filter buttons, year menu, and one row per paper grouped by year |
 | Classes | `<a name="classes">` | Courses taught by Dr. Hong |
 | Videos | `<!-- videos area start -->` | Embedded YouTube talks |
 | Gallery | `<!-- gallery area start -->` | Photo albums (conference trips, lab events) that open as a slideshow |
@@ -132,56 +132,85 @@ If a row already has four people, start a new `<div class="row">` ... `</div>` a
 
 ### 3.3 Add a publication
 
-1. Make a **square thumbnail** (600 × 600 px JPG) and save it as `img/portfolio/project-<short-id>.jpg`. A teaser figure from the paper, a photo from the study, or a simple illustration all work. Keep the style consistent with the existing ones.
-2. Find `<div id="portfolio-grid"`. The first card after it is the newest paper. Copy one card and paste it **above** the first one:
+The list works like the [Makeability Lab publications page](https://makeabilitylab.cs.washington.edu/publications/): papers are grouped by year, newest first, and each row shows the paper's first page, title, authors, venue, and PDF / DOI / Cite buttons.
+
+1. **Thumbnail = the paper's first page.** Open the PDF, take page 1 as an image, and save it as a 240 × 310 px JPG in `img/papers/`, named like `smith2027glasses.jpg` (first author's last name, year, one word). On a Mac with Python and PyMuPDF installed:
+
+   ```bash
+   python3 -c "import fitz,sys; fitz.open(sys.argv[1])[0].get_pixmap(dpi=110).save('page1.png')" paper.pdf
+   ```
+
+   then resize `page1.png` to 240 px wide in Preview (Tools → Adjust Size) and export it as JPG. A screenshot of page 1 works too.
+
+2. Find the year section, for example `<!-- ===== 2027 ===== -->`, and paste a new row **at the top** of it (newest first):
 
 ```html
-<div class="portfolio-item access paper">
-    <div class="portfolio-wrapper">
-        <div class="portfolio-thumb">
-            <img src="img/portfolio/project-<short-id>.jpg" alt="Thumbnail for Short Name" />
-            <div class="view-icon">
-                <a href="https://doi.org/10.1145/XXXXXXX" target="_blank" rel="noopener"><span class="icon-attachment"></span></a>
-            </div>
-        </div>
-        <div class="portfolio-caption caption-border text-center">
-            <h4><a href="https://doi.org/10.1145/XXXXXXX" target="_blank" rel="noopener">Short Name</a></h4>
-            <div class="work-tag">
-                <a href="https://doi.org/10.1145/XXXXXXX" target="_blank" rel="noopener">Full Paper Title</a>
-                <span class="pub-authors">First Author, Second Author, Jonggi Hong</span>
-            </div>
-            <div class="paper-menu">
-                CHI 2027: <a href="https://doi.org/10.1145/XXXXXXX" target="_blank" rel="noopener">PAPER</a>
-            </div>
-        </div>
+<article class="pub" data-tags="access paper">
+    <a class="pub-thumb" href="https://dl.acm.org/doi/pdf/10.1145/XXXXXXX" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+        <img src="img/papers/smith2027glasses.jpg" alt="" width="240" height="310" loading="lazy">
+    </a>
+    <div class="pub-body">
+        <h4 class="pub-title"><a href="https://dl.acm.org/doi/pdf/10.1145/XXXXXXX" target="_blank" rel="noopener">Full Paper Title</a></h4>
+        <p class="pub-authors">First Author, Second Author, Jonggi Hong</p>
+        <p class="pub-venue"><em>Proceedings of CHI 2027</em></p>
+        <p class="pub-links">
+            <a class="pub-btn" href="https://dl.acm.org/doi/pdf/10.1145/XXXXXXX" target="_blank" rel="noopener"><i class="ion-document-text" aria-hidden="true"></i> PDF</a>
+            <a class="pub-btn" href="https://doi.org/10.1145/XXXXXXX" target="_blank" rel="noopener"><i class="ion-link" aria-hidden="true"></i> DOI</a>
+            <button type="button" class="pub-btn pub-cite"><i class="ion-quote" aria-hidden="true"></i> Cite</button>
+        </p>
+        <pre class="pub-bibtex" hidden>@inproceedings{smith2027glasses,
+  title = {Full Paper Title},
+  author = {Smith, First and Author, Second and Hong, Jonggi},
+  booktitle = {Proceedings of the 2027 CHI Conference on Human Factors in Computing Systems},
+  year = {2027},
+  publisher = {Association for Computing Machinery},
+  doi = {10.1145/XXXXXXX}
+}</pre>
     </div>
-</div>
+</article>
 ```
 
-3. Set the **filter classes** on the first line. Pick every tag that applies:
+   - **PDF link:** for ACM papers use `https://dl.acm.org/doi/pdf/<DOI>` (the ACM Digital Library is open access). For other publishers, link the open-access PDF or Dr. Hong's copy on `jonggi.github.io/papers/`. The thumbnail, the title, and the PDF button all use this link.
+   - **BibTeX:** get it from the paper's ACM page (Export Citation → BibTeX), or run `curl -LH "Accept: application/x-bibtex" https://doi.org/<DOI>` and tidy it up. Keep the `<pre ...>` and `</pre>` on the same lines as the first and last BibTeX lines. If the BibTeX contains `&`, `<` or `>`, write them as `&amp;`, `&lt;`, `&gt;`.
+   - **Venue line:** `Proceedings of CHI 2027`, `Poster Proceedings of ASSETS 2027`, `Extended Abstracts of CHI 2027`, or the journal name. No acceptance rates.
+
+3. Set the **filter tags** in `data-tags`, separated by spaces. Pick every one that applies:
    - `access` – accessibility work
    - `wearable` – wearables, smart glasses, haptics
    - `humanai` – human-AI interaction, conversational agents, tools
-   - `paper` (full paper or journal article) **or** `poster` (poster, demo, extended abstract, workshop paper)
+   - `paper` (full paper or journal article) **or** `poster` (poster, demo, extended abstract, experience report, workshop paper)
 
-4. Update the counts in the filter buttons just above the grid, for example `All (28)` → `All (29)`. The buttons are labelled `data-filter=".access"` and so on.
+   The numbers on the filter buttons are counted automatically. There is nothing to update.
 
-5. Optional extra links in `paper-menu`, separated by ` | `: `<a href="...">VIDEO</a>`, `<a href="...">CODE</a>`, `<a href="...">PDF</a>`.
+4. **First paper of a new year?** Add a year section above the newest one, and a link for it at the top of the year menu (`<nav class="pub-years">`):
 
-**Not published yet (no DOI)?** Use the conference program page, or the lab news item, as the link. Do not upload paper PDFs before the publisher releases them.
+```html
+<!-- ===== 2027 ===== -->
+<section class="pub-year" data-year="2027">
+    <a name="pubs-2027"></a>
+    <h3 class="pub-year-title">2027</h3>
+    ...rows...
+</section>
+```
+
+```html
+<a href="#pubs-2027" data-year="2027">2027</a>
+```
+
+**Not published yet (no DOI)?** Leave out the DOI button and link the PDF only once the publisher has released it.
 
 ### 3.4 Mark an award
 
-Inside the card's `portfolio-thumb`, right after the `<img ...>` line, add:
+Inside the row's `<a class="pub-thumb" ...>`, right after the `<img ...>` line, add the corner ribbon:
 
 ```html
-<div class="ribbon ribbon-holder">AWARD</div>
+<span class="pub-ribbon">Award</span>
 ```
 
-and in `paper-menu` write the award after the venue:
+and add the award after the venue:
 
 ```html
-CHI 2027 <award>(Best Paper Honorable Mention)</award>: <a href="...">PAPER</a>
+<p class="pub-venue"><em>Proceedings of CHI 2027</em> <span class="pub-award"><i class="ion-trophy" aria-hidden="true"></i> Best Paper Honorable Mention</span></p>
 ```
 
 Then update the sentence under the Publications heading that says how many articles have been honored.
@@ -233,7 +262,7 @@ The title and tagline are the `<h1>` and `<p class="lead">` right below.
 | Use | Size | Format | Folder |
 |---|---|---|---|
 | Team portrait | 600 × 820 px (3:4 portrait) | JPG, under 200 KB | `img/team/` |
-| Paper thumbnail | 600 × 600 px (square) | JPG, under 200 KB | `img/portfolio/` |
+| Paper thumbnail (first page) | 240 × 310 px (portrait) | JPG, under 40 KB | `img/papers/` |
 | Class card | 1500 × 460 px | JPG | `img/class/` |
 | Gallery cover | 900 × 562 px (16:10) | JPG, under 150 KB | `img/gallery/<album>/cover.jpg` |
 | Gallery photo | longest side 1600 px | JPG, under 500 KB | `img/gallery/<album>/01.jpg` … |
@@ -260,9 +289,11 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 
 **The page is completely blank or unstyled.** Usually a broken `<div>` in `index.html`. Check the last edit: every opening tag needs its closing tag. GitHub's file view will show a diff of exactly what changed; revert it if needed (History → the commit → "Revert").
 
-**A publication card is much taller than the others.** The title is very long. Use a shorter display name in the `<h4>`; the full title stays in `work-tag`.
+**A paper does not show up under a filter.** Its `data-tags` is missing that tag, or has a typo. Tags are separated by spaces.
 
-**The filter buttons stop working.** A card is missing its `portfolio-item` class or `#portfolio-grid` got an extra tag inside it.
+**A year is missing from the year menu, or clicking it does nothing.** The year needs both a `<nav class="pub-years">` link with `href="#pubs-2027"` and a section with `<a name="pubs-2027"></a>`; the two numbers must match.
+
+**The Cite popup shows strange characters.** The BibTeX inside `<pre class="pub-bibtex">` contains a raw `&`, `<` or `>`. Write them as `&amp;`, `&lt;`, `&gt;`.
 
 **The hero video does not play.** It only plays over HTTPS on the live site, not from a file opened by double-clicking. It also never plays on phones (browsers block autoplay), which is expected; the animations show instead.
 
