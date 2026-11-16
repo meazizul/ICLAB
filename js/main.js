@@ -211,6 +211,8 @@
 		}
 	});
 
+	var openAlbumById = function () { return false; };
+
 	/* Gallery albums. Clicking a card opens the album: a panel with every photo as a small
 	   thumbnail and its caption (built from the hidden .gallery-album list). Clicking a thumbnail
 	   opens that photo large with its description; closing the photo returns to the album panel.
@@ -292,10 +294,9 @@
 							if (fig && fig.style.setProperty) { fig.style.setProperty('--gallery-bg', 'url("' + a.href + '")'); }
 						},
 						close: function () {
-							var last = this.index;
 							stop();
-							/* back to the album panel, like stepping out of a submenu */
-							setTimeout(function () { openAlbum(last); }, BLOOM_MS);
+							/* closing the photo returns straight to the page (the album does not pop up again) */
+							setTimeout(function () { $card.focus(); }, BLOOM_MS);
 						}
 					}
 				}, index);
@@ -313,16 +314,12 @@
 			$card.data('openAlbum', openAlbum);
 		});
 
-		/* Deep links: a link to #gallery-<album> (for example the "Photos" pills in Recent News, or the
-		   page URL) scrolls to that album card and opens it. */
-		function openAlbumByHash(hash, delay) {
-			var open = hash && /^#gallery-/.test(hash) && $(hash).data('openAlbum');
-			if (open) { setTimeout(open, delay); }
+		/* Album addresses (gallery/<album>/) are handled by "Clean addresses" below, which calls this. */
+		openAlbumById = function (cardId, delay) {
+			var open = $('#' + cardId).data('openAlbum');
+			if (open) { setTimeout(open, delay || 0); }
 			return !!open;
-		}
-		$(document).on('click', 'a[href^="#gallery-"]', function () { openAlbumByHash(this.getAttribute('href'), 700); });
-		$(window).on('hashchange', function () { openAlbumByHash(location.hash, 300); });
-		openAlbumByHash(location.hash, 900);
+		};
 	})();
 
 	/*----------------------------
@@ -402,6 +399,85 @@
 			scrollText: '<i class="ion-chevron-up"></i>',
 		});
 	}
+
+	/*----------------------------
+	Clean addresses. Every section has its own address instead of index.html#...:
+	  about/  news/  team/  publications/  publications/2026/  classes/  videos/  gallery/  gallery/dis2026/  apply/
+	Each is a tiny folder made by tools/build-pages.py that forwards here with a #hash. This code scrolls to
+	the place (opening the album for gallery/<album>/) and puts the clean address back in the address bar.
+	Clicking those links on this page scrolls without reloading. Old #team-style links still work.
+	------------------------------ */
+	(function () {
+		if (!$('#home-area').length) return;                              /* homepage only */
+		var ROOT = (document.baseURI || location.href).replace(/[?#].*$/, '').replace(/[^\/]*$/, '');
+		var NAMES = { about: 'about', news: 'news', team: 'team', publications: 'pubs', classes: 'classes', videos: 'videos', gallery: 'gallery', apply: 'apply' };
+		var HASH_TO_PATH = {}; $.each(NAMES, function (path, name) { HASH_TO_PATH[name] = path; });
+
+		function fromPath(rest) {
+			rest = rest.replace(/[?#].*$/, '');
+			if (rest === '' || rest === 'index.html') return { path: '', top: true };
+			var m = rest.match(/^([a-z]+)\/(?:([a-z0-9-]+)\/)?$/);
+			if (!m || !NAMES[m[1]]) return null;
+			if (!m[2]) return { path: m[1] + '/', anchor: NAMES[m[1]] };
+			if (m[1] === 'publications' && /^\d{4}$/.test(m[2])) return { path: rest, anchor: 'pubs-' + m[2] };
+			if (m[1] === 'gallery') return { path: rest, album: 'gallery-' + m[2] };
+			return null;
+		}
+		function fromHash(hash) {
+			var h = hash.replace(/^#/, ''), m;
+			if ((m = h.match(/^gallery-([a-z0-9-]+)$/))) return fromPath('gallery/' + m[1] + '/');
+			if ((m = h.match(/^pubs-(\d{4})$/))) return fromPath('publications/' + m[1] + '/');
+			return HASH_TO_PATH[h] ? fromPath(HASH_TO_PATH[h] + '/') : null;
+		}
+		function fromUrl(url) {
+			if (url.indexOf(ROOT) !== 0) return null;
+			var rest = url.slice(ROOT.length);
+			if (rest.charAt(0) === '#') return fromHash(rest);
+			var r = fromPath(rest);
+			if (r && r.top && /#./.test(rest)) return fromHash(rest.slice(rest.indexOf('#')));
+			return r;
+		}
+		function go(route, how) {
+			var top = 0;
+			if (!route.top) {
+				var $t = route.album ? $('#' + route.album) : $('a[name="' + route.anchor + '"]').first();
+				if (!$t.length) return false;
+				top = $t.offset().top - (route.album ? 90 : 0);
+			}
+			$('html, body').stop().animate({ scrollTop: Math.max(0, top) }, how === 'load' ? 300 : 600);
+			if (route.album) openAlbumById(route.album, how === 'load' ? 450 : 700);
+			var url = ROOT + route.path;
+			if (how === 'push' && location.href !== url) history.pushState({ icl: route.path }, '', url);
+			else if (how !== 'pop') history.replaceState({ icl: route.path }, '', url);
+			if ($('.mean-nav').is(':visible')) { $('.meanmenu-reveal').trigger('click'); }
+			return true;
+		}
+
+		$(document).on('click', 'a[href]', function (e) {
+			if (e.isDefaultPrevented() || e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || this.target === '_blank') return;
+			var route = fromUrl(this.href);
+			if (!route) return;
+			e.preventDefault();
+			go(route, 'push');
+		});
+		$(window).on('popstate', function () {
+			var route = fromUrl(location.href);
+			if (route) go(route, 'pop');
+		});
+		$(window).on('hashchange', function () {                          /* an old #team-style link opened on this page */
+			var route = location.hash ? fromHash(location.hash) : null;
+			if (route) go(route, 'replace');
+		});
+
+		/* Arriving from a forwarding folder (or an old link) with #team, #pubs-2026, #gallery-dis2026 ... */
+		var initial = location.hash ? fromHash(location.hash) : null;
+		if (initial) {
+			history.replaceState({ icl: initial.path }, '', ROOT + initial.path);
+			var done = false, land = function () { if (!done) { done = true; go(initial, 'load'); } };
+			$(window).on('load', land);
+			setTimeout(land, 1200);
+		}
+	})();
 
 	/* smooth scroll for in-page nav links */
 	$('a[href^="#"]').on('click', function (e) {

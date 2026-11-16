@@ -21,9 +21,9 @@
 
 	function message(html) { $root.html('<div class="container"><div class="person-message">' + html + '</div></div>'); }
 
-	if (!id) { message('<h1>Lab members</h1><p>Pick someone from <a href="index.html#team">Our Team</a> to see their profile.</p>'); return; }
+	if (!id) { message('<h1>Lab members</h1><p>Pick someone from <a href="team/">Our Team</a> to see their profile.</p>'); return; }
 
-	if (!window.fetch || !window.DOMParser) { message('<p>This browser cannot load profiles. See <a href="index.html#team">Our Team</a>.</p>'); return; }
+	if (!window.fetch || !window.DOMParser) { message('<p>This browser cannot load profiles. See <a href="team/">Our Team</a>.</p>'); return; }
 
 	fetch('index.html', { cache: 'no-cache' }).then(function (r) {
 		if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -32,13 +32,13 @@
 		render(new DOMParser().parseFromString(html, 'text/html'));
 	}).catch(function () {
 		message('<h1>Profile unavailable</h1><p>The profile could not be loaded. If you opened this file directly from your computer, ' +
-			'preview the site through a local web server instead (see the README), or go back to <a href="index.html#team">Our Team</a>.</p>');
+			'preview the site through a local web server instead (see the README), or go back to <a href="team/">Our Team</a>.</p>');
 	});
 
 	function render(doc) {
 		/* ---------- person (team card) ---------- */
 		var card = doc.querySelector('.team-item[data-person="' + id + '"]');
-		if (!card) { message('<h1>Person not found</h1><p>We could not find that lab member. Go back to <a href="index.html#team">Our Team</a>.</p>'); return; }
+		if (!card) { message('<h1>Person not found</h1><p>We could not find that lab member. Go back to <a href="team/">Our Team</a>.</p>'); return; }
 
 		var alumniH2 = Array.prototype.filter.call(doc.querySelectorAll('h2'), function (h) { return $.trim(h.textContent) === 'Alumni'; })[0];
 		var extra = DATA.people[id] || {};

@@ -18,9 +18,10 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 ```
 (repository root)
 ├── index.html          ← THE ENTIRE SITE. 95% of edits happen in this one file.
-├── people/<id>/        One profile page per team member, e.g. people/azizul-haque/ (made by tools/build-profiles.py).
+├── people/<id>/        One profile page per team member, e.g. people/azizul-haque/ (made by tools/build-pages.py).
 ├── person.html         Template for those profile pages. Edit this, not the copies in people/.
-├── tools/build-profiles.py   Makes people/<id>/index.html for everyone on the team page (see 3.10).
+├── tools/build-pages.py   Makes the clean addresses: people/<id>/ profiles and the team/, publications/ ... folders (see 3.11).
+├── about/ team/ publications/ gallery/ ...   Tiny forwarding pages for the clean addresses. Made by the script; do not edit.
 ├── js/lab-data.js      Profile extras: bios, projects, and talks (see 3.10).
 ├── js/person.js        Builds the profile pages from index.html + js/lab-data.js. No need to edit.
 ├── style.css           Template stylesheet. Do not edit. Override in css/custom.css instead.
@@ -50,6 +51,8 @@ The page has these sections, in order. Each starts with an HTML comment you can 
 | Gallery | `<!-- gallery area start -->` | Photo albums (conference trips, lab events) that open as a slideshow |
 | Lab Openings | `<!-- apply area start -->` | Recruiting text and contact details |
 | Footer | `<!-- footer start -->` | Copyright line and the "Built with love by" maintainer credit |
+
+Every section also has its own clean address, such as `/team/` or `/publications/2026/` (see 3.11).
 
 ---
 
@@ -97,10 +100,10 @@ Keep the list to the current and previous year (for example 2026 and 2025); dele
 
 You do not need to worry about length: the page shows only as many items as fit beside the About us text, so both columns end on the same line, and the rest open with a **More news** link. On phones it shows the newest four.
 
-The pulsing **NEW** badge is added automatically to whichever line is first, so it moves on its own when you add a line at the top. To link a news item to a photo album, add a Photos pill at the end of the line, pointing at the album's `id` from the Gallery section:
+The pulsing **NEW** badge is added automatically to whichever line is first, so it moves on its own when you add a line at the top. To link a news item to a photo album, add a Photos pill at the end of the line, pointing at the album's address, `gallery/<album-name>/` (the album's `id` without `gallery-`):
 
 ```html
-<a class="news-photos" href="#gallery-assets2026"><i class="ion-images"></i> Photos</a>
+<a class="news-photos" href="gallery/assets2026/"><i class="ion-images"></i> Photos</a>
 ```
 
 Clicking it scrolls to the Gallery and opens that album. Link paper titles in the news to their DOI (`<a href="https://doi.org/..." target="_blank" rel="noopener"><em>Title</em></a>`) so readers can reach the paper in one click.
@@ -132,7 +135,7 @@ Clicking it scrolls to the Gallery and opens that album. Link paper titles in th
 </div>
 ```
 
-Use the photo's file name (without `.jpg`) as the id in all three places: `data-person`, and the two `people/.../` links. Then create the person's profile page (see 3.10): run `python3 tools/build-profiles.py`, or on GitHub copy any `people/<someone>/index.html` to `people/<new-id>/index.html` and change the id in `data-person="..."` and the name in `<title>`.
+Use the photo's file name (without `.jpg`) as the id in all three places: `data-person`, and the two `people/.../` links. Then create the person's profile page (see 3.10): run `python3 tools/build-pages.py`, or on GitHub copy any `people/<someone>/index.html` to `people/<new-id>/index.html` and change the id in `data-person="..."` and the name in `<title>`.
 
 Delete any social `<a>` link lines you do not need. Available icons: `ion-link` (website), `ion-email`, `ion-social-linkedin`, `ion-social-github`, `ion-social-twitter`, `ion-university` (Google Scholar).
 
@@ -207,8 +210,10 @@ The list works like the [Makeability Lab publications page](https://makeabilityl
 ```
 
 ```html
-<a href="#pubs-2027" data-year="2027">2027</a>
+<a href="publications/2027/" data-year="2027">2027</a>
 ```
+
+Then run `python3 tools/build-pages.py` so the address `/publications/2027/` exists (see 3.11).
 
 **Not published yet (no DOI)?** Leave out the DOI button and link the PDF only once the publisher has released it.
 
@@ -244,10 +249,11 @@ Find `<!-- videos area start -->`. Copy the `blog-item` block and change the You
    - the `cover.jpg` path and its `alt` text,
    - `gallery-meta` (month and place), `gallery-title` (event name), and the short paragraph (these also appear at the top of the album panel),
    - the hidden `<ul class="gallery-album">`: one `<li><a href="img/gallery/<album-name>/01.jpg" data-thumb="img/gallery/<album-name>/01-thumb.jpg" data-alt="...">Caption</a></li>` per photo. The caption shows under the thumbnail in the album panel and under the large photo; write the event, the authors, and what is pictured.
-3. The photo count badge on the cover fills in by itself. Three albums fit per row; a fourth starts a new row automatically.
-4. Phone photos in HEIC format must be converted to JPG first (on a Mac: `sips -s format jpeg IMG_1234.HEIC --out 01.jpg`). Saving through Preview or Photos also strips location data from the file, which is what you want on a public site.
+3. Run `python3 tools/build-pages.py` so the album gets its own address, `/gallery/<album-name>/` (see 3.11).
+4. The photo count badge on the cover fills in by itself. Three albums fit per row; a fourth starts a new row automatically.
+5. Phone photos in HEIC format must be converted to JPG first (on a Mac: `sips -s format jpeg IMG_1234.HEIC --out 01.jpg`). Saving through Preview or Photos also strips location data from the file, which is what you want on a public site.
 
-How it behaves: clicking a card blooms open the **album panel**, which shows every photo as a thumbnail with its caption. Clicking a thumbnail opens that **photo large** with its description; arrows and the keyboard move between photos, and the large view steps forward on its own every 3.5 seconds until the last photo (any key or click stops it). Closing the large photo returns to the album panel; closing the panel returns to the page. Change the autoplay speed with the `data-autoplay` attribute (milliseconds) on the gallery `<div>`, or set it to `0` to turn it off.
+How it behaves: clicking a card blooms open the **album panel**, which shows every photo as a thumbnail with its caption. Clicking a thumbnail opens that **photo large** with its description; arrows and the keyboard move between photos, and the large view steps forward on its own every 3.5 seconds until the last photo (any key or click stops it). Closing the large photo (the ×, Esc, or a click outside it) returns straight to the page; to pick another photo, use the arrows or open the album again. Change the autoplay speed with the `data-autoplay` attribute (milliseconds) on the gallery `<div>`, or set it to `0` to turn it off.
 
 ### 3.8 Edit the About text, Lab Openings, or contact details
 
@@ -293,12 +299,12 @@ So adding a paper, a video, or a news line on `index.html` updates every profile
 
 - **Projects.** Each project lists its paper ids (`pub-...` without `pub-`). Everyone who authored one of those papers gets the project on their profile. Copy an entry and change the title, years, one-line summary, papers, link, and a 640 × 400 px image in `img/projects/`.
 
-- **Talks.** Newest first. `people` lists who presented, `type` is `Talk` or `Poster`, and `links` can have `paper`, `slides`, `video`, and `photos` (for example `index.html#gallery-dis2026`).
+- **Talks.** Newest first. `people` lists who presented, `type` is `Talk` or `Poster`, and `links` can have `paper`, `slides`, `video`, and `photos` (for example `gallery/dis2026/`).
 
 **New team member? Make their page.** Each address is a small folder, `people/<id>/index.html`, copied from `person.html`. After adding someone to Our Team (3.2), run:
 
 ```bash
-python3 tools/build-profiles.py
+python3 tools/build-pages.py
 ```
 
 It writes a page for everyone on the team page, with their name in the browser tab and in link previews. Re-run it whenever you change `person.html`. You do **not** need to re-run it for new papers, news, bios, projects or talks; those appear by themselves. No Python? Copy any `people/<someone>/` folder on GitHub and change the id in `data-person="..."` and the name in `<title>`.
@@ -306,6 +312,30 @@ It writes a page for everyone on the team page, with their name in the browser t
 Preview profile pages through the local server in Option B (`python3 -m http.server`). Opened as a plain file, the page cannot read `index.html` and shows "Profile unavailable". Old links of the form `person.html?id=<id>` still work; they forward to `people/<id>/`.
 
 ---
+
+### 3.11 Clean addresses (team/, publications/, people/...)
+
+Every part of the site has a short, shareable address instead of `index.html#...`:
+
+| Address | Goes to |
+|---|---|
+| `/` | Homepage |
+| `/about/`, `/news/`, `/team/`, `/publications/`, `/classes/`, `/videos/`, `/gallery/`, `/apply/` | That section |
+| `/publications/2026/` | The 2026 papers |
+| `/gallery/dis2026/` | Opens the DIS 2026 album |
+| `/people/azizul-haque/` | A person's profile (`/people/` itself goes to Our Team) |
+
+Clicking the menu on the homepage scrolls to the section and shows its address without reloading; the browser's Back button works as expected. Old links such as `index.html#team` or `/#pubs` still work and switch to the new address.
+
+**How it works.** Each address is a small folder with an `index.html` made by `tools/build-pages.py`: the profile folders are full pages, and the section folders forward to the right place on the homepage, where `js/main.js` shows the clean address again. In `index.html`, link to sections as `team/`, `publications/2026/`, `gallery/<album>/` (never `#team` or `index.html#...`).
+
+**Run the script after** adding a team member, a new publication year, or a Gallery album (or editing `person.html`):
+
+```bash
+python3 tools/build-pages.py
+```
+
+It prints every address it made. New papers, news, bios, projects and talks do not need it. Links clicked on the homepage work even before you run it; only opening a brand-new address directly (or reloading it) needs the folder.
 
 ## 4. Image guidelines
 
@@ -342,11 +372,13 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 
 **A paper does not show up under a filter.** Its `data-tags` is missing that tag, or has a typo. Tags are separated by spaces.
 
-**A year is missing from the year menu, or clicking it does nothing.** The year needs both a `<nav class="pub-years">` link with `href="#pubs-2027"` and a section with `<a name="pubs-2027"></a>`; the two numbers must match.
+**A year is missing from the year menu, or clicking it does nothing.** The year needs both a `<nav class="pub-years">` link with `href="publications/2027/"` and a section with `<a name="pubs-2027"></a>`; the two numbers must match.
 
 **A profile says "Profile unavailable".** It was opened as a file. Use `python3 -m http.server` (Option B), or check it on the live site.
 
-**A team member's photo opens a "404 File not found" page.** Their `people/<id>/` folder does not exist yet. Run `python3 tools/build-profiles.py` (or copy a folder, see 3.10), and check the id matches the photo file name.
+**A clean address (for example `/gallery/new-album/`) shows "404 File not found".** Its folder has not been made yet. Run `python3 tools/build-pages.py`.
+
+**A team member's photo opens a "404 File not found" page.** Their `people/<id>/` folder does not exist yet. Run `python3 tools/build-pages.py` (or copy a folder, see 3.10), and check the id matches the photo file name.
 
 **A paper is missing from someone's profile.** Their name in the paper's author line is spelled differently from their team card. Add that spelling to `aliases` in `js/lab-data.js`.
 

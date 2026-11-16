@@ -3,6 +3,8 @@
 
 <head>
 	<meta charset="utf-8">
+	<script>/* Links resolve from the site root even after the address bar shows a section address like team/ (see main.js "Clean addresses"). */
+		(function () { var b = document.createElement('base'); b.href = location.href.replace(/[?#].*$/, '').replace(/[^\/]*$/, ''); document.head.appendChild(b); })();</script>
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>Interactive Computing Lab - Stevens Institute of Technology</title>
 	<meta name="description" content="The Interactive Computing Lab at Stevens Institute of Technology designs and evaluates accessible interactions with emerging technologies: AI, wearables, and smart glasses.">
@@ -39,36 +41,36 @@
 				<div class="row">
 					<div class="col-md-4 col-sm-3">
 						<div class="logo hidden-xs">
-							<h4><a href="index.html" class="site-logo"><img src="img/logo/icl-mark.png" alt="" width="344" height="263"><span>Interactive Computing Lab</span></a></h4>
+							<h4><a href="./" class="site-logo"><img src="img/logo/icl-mark.png" alt="" width="344" height="263"><span>Interactive Computing Lab</span></a></h4>
 						</div>
 						<div class="mobile-logo logo visible-xs">
-							<h4><a href="index.html" class="site-logo"><img src="img/logo/icl-mark.png" alt="" width="344" height="263"><span>Interactive Computing Lab</span></a></h4>
+							<h4><a href="./" class="site-logo"><img src="img/logo/icl-mark.png" alt="" width="344" height="263"><span>Interactive Computing Lab</span></a></h4>
 						</div>
 					</div>
 					<div class="col-md-8 col-sm-9">
 						<div class="menu-area hidden-xs">
 							<nav>
 								<ul class="basic-menu clearfix">
-									<li><a href="#about">About us</a></li>
-									<li><a href="#team">Our Team</a></li>
-									<li><a href="#pubs">Publications</a></li>
-									<li><a href="#classes">Classes</a></li>
-									<li><a href="#videos">Videos</a></li>
-									<li><a href="#gallery">Gallery</a></li>
-									<li><a href="#apply">Apply</a></li>
+									<li><a href="about/">About us</a></li>
+									<li><a href="team/">Our Team</a></li>
+									<li><a href="publications/">Publications</a></li>
+									<li><a href="classes/">Classes</a></li>
+									<li><a href="videos/">Videos</a></li>
+									<li><a href="gallery/">Gallery</a></li>
+									<li><a href="apply/">Apply</a></li>
 								</ul>
 							</nav>
 						</div>
 						<div class="basic-mobile-menu visible-xs">
 							<nav id="mobile-nav">
 								<ul>
-									<li><a href="#about">About us</a></li>
-									<li><a href="#team">Our Team</a></li>
-									<li><a href="#pubs">Publications</a></li>
-									<li><a href="#classes">Classes</a></li>
-									<li><a href="#videos">Videos</a></li>
-									<li><a href="#gallery">Gallery</a></li>
-									<li><a href="#apply">Apply</a></li>
+									<li><a href="about/">About us</a></li>
+									<li><a href="team/">Our Team</a></li>
+									<li><a href="publications/">Publications</a></li>
+									<li><a href="classes/">Classes</a></li>
+									<li><a href="videos/">Videos</a></li>
+									<li><a href="gallery/">Gallery</a></li>
+									<li><a href="apply/">Apply</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -142,20 +144,22 @@
 					</p>
 
 					<p>
-						Explore our projects below, and <a href="#apply">get in touch</a> if you are interested in
+						Explore our projects below, and <a href="apply/">get in touch</a> if you are interested in
 						working with us or participating in a study.
 					</p>
 				</div>
 				<div class="col-sm-4 col-md-4 col-lg-4 mb-40">
+					<a name="news"></a>
 					<h2>Recent News</h2>
 					<p>
+						<strong>Nov 2026:</strong> <a href="https://doi.org/10.1145/3849741.3856142" target="_blank" rel="noopener"><em>Where Guidance Happens: Toward a Knowledge Graph of Situated Orientation and Mobility Instruction</em></a> (Roland Aranas, Shiven Pandya, Jiayin Huang, and Jonggi Hong, with the University of Minnesota) receives the <strong>Best Paper Award</strong> at SpatialConnect '26, an ACM SIGSPATIAL 2026 workshop in Riverside, CA! <a class="news-photos" href="gallery/sigspatial2026/" title="See the SIGSPATIAL 2026 photos"><i class="ion-images"></i> Photos</a><br>
 						<strong>Nov 2026:</strong> Nicholas Russo's <a href="https://doi.org/10.1145/3800645.3813091" target="_blank" rel="noopener"><em>CatalaBlocks</em></a>, a block-based visual tool that helps legal professionals without programming experience turn laws into code (DIS 2026), is featured in the "Student Research" column of the Fall 2026 <a href="https://assets.stevens.edu/mviowpldu823/6u7NhwUsmyg1eChDc1chBH/948216044c73b6d979742b0bbfe70538/Stevens-Indicator_Fall-2026-WEB_v2.pdf#page=18" target="_blank" rel="noopener"><em>Stevens Indicator</em></a> magazine (p.&nbsp;16).<br>
-						<strong>Oct 2026:</strong> Azizul Haque presents the <a href="https://doi.org/10.1145/3797867.3841220" target="_blank" rel="noopener"><em>ASPIRE</em></a> poster (Azizul Haque, Jonggi Hong) at <strong>ASSETS 2026</strong> in Porto, Portugal, and Rifat Rahman Khan presents the experience report <a href="https://doi.org/10.1145/3797867.3832769" target="_blank" rel="noopener"><em>Debugging Computer Vision as a Blind Researcher</em></a> (Rifat Rahman Khan, Jonggi Hong), reflecting on building the computer vision components of our smart-glasses form-filling assistant as a legally blind researcher. <a class="news-photos" href="#gallery-assets2026" title="See the ASSETS 2026 photos"><i class="ion-images"></i> Photos</a><br>
+						<strong>Oct 2026:</strong> Azizul Haque presents the <a href="https://doi.org/10.1145/3797867.3841220" target="_blank" rel="noopener"><em>ASPIRE</em></a> poster (Azizul Haque, Jonggi Hong) at <strong>ASSETS 2026</strong> in Porto, Portugal, and Rifat Rahman Khan presents the experience report <a href="https://doi.org/10.1145/3797867.3832769" target="_blank" rel="noopener"><em>Debugging Computer Vision as a Blind Researcher</em></a> (Rifat Rahman Khan, Jonggi Hong), reflecting on building the computer vision components of our smart-glasses form-filling assistant as a legally blind researcher. <a class="news-photos" href="gallery/assets2026/" title="See the ASSETS 2026 photos"><i class="ion-images"></i> Photos</a><br>
 						<strong>Sep 2026:</strong> Our poster <a href="https://doi.org/10.1145/3797867.3841220" target="_blank" rel="noopener"><em>ASPIRE: Accessible Slide Presentation via Intelligent Real-time Editing</em></a> (Azizul Haque, Jonggi Hong) is accepted to <strong>ASSETS 2026</strong> in Porto, Portugal, October 25&ndash;28.<br>
-						<strong>Jun 2026:</strong> <a href="https://doi.org/10.1145/3800645.3812965" target="_blank" rel="noopener"><em>Enhancing Slide Presentation Accessibility for Blind and Low-Vision Audiences Through Delay-Buffered Editing</em></a> (Azizul Haque, Jonggi Hong) receives a <strong>Best Paper Honorable Mention</strong> at DIS 2026! <a class="news-photos" href="#gallery-dis2026" title="See the DIS 2026 photos"><i class="ion-images"></i> Photos</a><br>
-						<strong>Jun 2026:</strong> Two ICL papers are presented at <strong>DIS 2026</strong> in Singapore: <a href="https://doi.org/10.1145/3800645.3813091" target="_blank" rel="noopener"><em>CatalaBlocks</em></a>, led by undergraduates Nicholas Russo, Matthew Schmitt, and Ananya Iyer, and <a href="https://doi.org/10.1145/3800645.3812965" target="_blank" rel="noopener"><em>Enhancing Slide Presentation Accessibility for Blind and Low-Vision Audiences Through Delay-Buffered Editing</em></a> by Azizul Haque. <a class="news-photos" href="#gallery-dis2026" title="See the DIS 2026 photos"><i class="ion-images"></i> Photos</a><br>
+						<strong>Jun 2026:</strong> <a href="https://doi.org/10.1145/3800645.3812965" target="_blank" rel="noopener"><em>Enhancing Slide Presentation Accessibility for Blind and Low-Vision Audiences Through Delay-Buffered Editing</em></a> (Azizul Haque, Jonggi Hong) receives a <strong>Best Paper Honorable Mention</strong> at DIS 2026! <a class="news-photos" href="gallery/dis2026/" title="See the DIS 2026 photos"><i class="ion-images"></i> Photos</a><br>
+						<strong>Jun 2026:</strong> Two ICL papers are presented at <strong>DIS 2026</strong> in Singapore: <a href="https://doi.org/10.1145/3800645.3813091" target="_blank" rel="noopener"><em>CatalaBlocks</em></a>, led by undergraduates Nicholas Russo, Matthew Schmitt, and Ananya Iyer, and <a href="https://doi.org/10.1145/3800645.3812965" target="_blank" rel="noopener"><em>Enhancing Slide Presentation Accessibility for Blind and Low-Vision Audiences Through Delay-Buffered Editing</em></a> by Azizul Haque. <a class="news-photos" href="gallery/dis2026/" title="See the DIS 2026 photos"><i class="ion-images"></i> Photos</a><br>
 						<strong>Feb 2026:</strong> Jiayin Huang and Dawei Xu's study of emotional preferences for chatbot support is accepted to <strong>AHFE 2026</strong>.<br>
-						<strong>Oct 2025:</strong> The lab presents two papers at <strong>ASSETS 2025</strong> in Denver: an <a href="https://doi.org/10.1145/3663547.3759722" target="_blank" rel="noopener"><em>interactive form-filling assistant on smart glasses</em></a> (Rifat Rahman Khan, Srikala Sandu) and <a href="https://doi.org/10.1145/3663547.3759719" target="_blank" rel="noopener"><em>accessible slide presentations via intelligent real-time editing</em></a> (Azizul Haque). <a class="news-photos" href="#gallery-assets2025" title="See the ASSETS 2025 photos"><i class="ion-images"></i> Photos</a><br>
+						<strong>Oct 2025:</strong> The lab presents two papers at <strong>ASSETS 2025</strong> in Denver: an <a href="https://doi.org/10.1145/3663547.3759722" target="_blank" rel="noopener"><em>interactive form-filling assistant on smart glasses</em></a> (Rifat Rahman Khan, Srikala Sandu) and <a href="https://doi.org/10.1145/3663547.3759719" target="_blank" rel="noopener"><em>accessible slide presentations via intelligent real-time editing</em></a> (Azizul Haque). <a class="news-photos" href="gallery/assets2025/" title="See the ASSETS 2025 photos"><i class="ion-images"></i> Photos</a><br>
 						<strong>Sep 2025:</strong> <a href="https://doi.org/10.1145/3746059.3747801" target="_blank" rel="noopener"><em>Typing Haptically</em></a>, a collaboration with KAIST on non-auditory text entry for blind and low-vision users, appears at <strong>UIST 2025</strong>. <a href="https://doi.org/10.1145/3746058.3758401" target="_blank" rel="noopener"><em>CustomSight</em></a>, with the University of Virginia, is presented in the UIST adjunct track.<br>
 						<strong>Aug 2025:</strong> Jiayin Huang presents work on <a href="https://openaccess.cms-conferences.org/publications/book/978-1-964867-73-1/article/978-1-964867-73-1_13" target="_blank" rel="noopener">how users validate conversational-agent responses</a> at <strong>IHIET 2025</strong>.
 					</p>
@@ -441,7 +445,7 @@
 			<div class="area-title text-center">
 				<h2>Publications</h2>
 				<p>We publish our research in the leading human-computer interaction and accessibility venues,
-					including ASSETS, UIST, CHI, and DIS. Four of our articles have been honored with best paper awards
+					including ASSETS, UIST, CHI, and DIS. Five of our articles have been honored with best paper awards
 					or nominations.</p>
 			</div>
 			<!-- Filter buttons: the counts are filled in by js/main.js -->
@@ -457,20 +461,20 @@
 			<div class="pub-layout">
 				<!-- Year menu on the left: one link per year section below -->
 				<nav class="pub-years" aria-label="Publication years">
-					<a href="#pubs-2026" data-year="2026">2026</a>
-					<a href="#pubs-2025" data-year="2025">2025</a>
-					<a href="#pubs-2024" data-year="2024">2024</a>
-					<a href="#pubs-2023" data-year="2023">2023</a>
-					<a href="#pubs-2022" data-year="2022">2022</a>
-					<a href="#pubs-2021" data-year="2021">2021</a>
-					<a href="#pubs-2020" data-year="2020">2020</a>
-					<a href="#pubs-2019" data-year="2019">2019</a>
-					<a href="#pubs-2018" data-year="2018">2018</a>
-					<a href="#pubs-2017" data-year="2017">2017</a>
-					<a href="#pubs-2016" data-year="2016">2016</a>
-					<a href="#pubs-2015" data-year="2015">2015</a>
-					<a href="#pubs-2014" data-year="2014">2014</a>
-					<a href="#pubs-2013" data-year="2013">2013</a>
+					<a href="publications/2026/" data-year="2026">2026</a>
+					<a href="publications/2025/" data-year="2025">2025</a>
+					<a href="publications/2024/" data-year="2024">2024</a>
+					<a href="publications/2023/" data-year="2023">2023</a>
+					<a href="publications/2022/" data-year="2022">2022</a>
+					<a href="publications/2021/" data-year="2021">2021</a>
+					<a href="publications/2020/" data-year="2020">2020</a>
+					<a href="publications/2019/" data-year="2019">2019</a>
+					<a href="publications/2018/" data-year="2018">2018</a>
+					<a href="publications/2017/" data-year="2017">2017</a>
+					<a href="publications/2016/" data-year="2016">2016</a>
+					<a href="publications/2015/" data-year="2015">2015</a>
+					<a href="publications/2014/" data-year="2014">2014</a>
+					<a href="publications/2013/" data-year="2013">2013</a>
 				</nav>
 				<div class="pub-list">
 
@@ -478,6 +482,32 @@
 					<section class="pub-year" data-year="2026">
 						<a name="pubs-2026"></a>
 						<h3 class="pub-year-title">2026</h3>
+						<article class="pub" id="pub-aranas2026guidance" data-tags="access humanai poster">
+							<a class="pub-thumb" href="https://dl.acm.org/doi/pdf/10.1145/3849741.3856142" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+								<img src="img/papers/aranas2026guidance.jpg" alt="" width="240" height="310" loading="lazy">
+								<span class="pub-ribbon">Award</span>
+							</a>
+							<div class="pub-body">
+								<h4 class="pub-title"><a href="https://dl.acm.org/doi/pdf/10.1145/3849741.3856142" target="_blank" rel="noopener">Where Guidance Happens: Toward a Knowledge Graph of Situated Orientation and Mobility Instruction</a></h4>
+								<p class="pub-authors">Roland Aranas, Jina Kim, Shiven Pandya, Jiayin Huang, Hyunjoong Kim, Yao-Yi Chiang, Jonggi Hong</p>
+								<p class="pub-venue"><em>Proceedings of SpatialConnect 2026 (ACM SIGSPATIAL Workshop)</em> <span class="pub-award"><i class="ion-trophy" aria-hidden="true"></i> Best Paper Award</span></p>
+								<p class="pub-links">
+									<a class="pub-btn" href="https://dl.acm.org/doi/pdf/10.1145/3849741.3856142" target="_blank" rel="noopener"><i class="ion-document-text" aria-hidden="true"></i> PDF</a>
+									<a class="pub-btn" href="https://doi.org/10.1145/3849741.3856142" target="_blank" rel="noopener"><i class="ion-link" aria-hidden="true"></i> DOI</a>
+									<button type="button" class="pub-btn pub-cite"><i class="ion-quote" aria-hidden="true"></i> Cite</button>
+								</p>
+								<pre class="pub-bibtex" hidden>@inproceedings{aranas2026guidance,
+  title = {Where Guidance Happens: Toward a Knowledge Graph of Situated Orientation and Mobility Instruction},
+  author = {Aranas, Roland and Kim, Jina and Pandya, Shiven and Huang, Jiayin and Kim, Hyunjoong and Chiang, Yao-Yi and Hong, Jonggi},
+  booktitle = {Proceedings of the 2nd ACM SIGSPATIAL International Workshop on Spatial Intelligence for Smart and Connected Communities},
+  series = {SpatialConnect &#x27;26},
+  pages = {52--61},
+  year = {2026},
+  publisher = {Association for Computing Machinery},
+  doi = {10.1145/3849741.3856142}
+}</pre>
+							</div>
+						</article>
 						<article class="pub" id="pub-khan2026debugging" data-tags="access humanai poster">
 							<a class="pub-thumb" href="https://dl.acm.org/doi/pdf/10.1145/3797867.3832769" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
 								<img src="img/papers/khan2026debugging.jpg" alt="" width="240" height="310" loading="lazy">
@@ -1399,6 +1429,23 @@
 			<div class="row">
 				<!-- One album per column, newest first. Photos are listed in the hidden gallery-album list. -->
 				<div class="col-sm-6 col-md-4">
+					<div class="gallery-item" id="gallery-sigspatial2026" tabindex="0" role="button" aria-label="Open the SIGSPATIAL 2026 album">
+						<div class="gallery-cover">
+							<img src="img/gallery/sigspatial2026/cover.jpg" alt="The paper's authors holding their Best Paper Award certificates at SIGSPATIAL 2026" loading="lazy">
+							<span class="gallery-count"><i class="ion-images"></i> <span class="gallery-count-num">1</span></span>
+							<div class="gallery-overlay"><span class="gallery-open">View photos</span></div>
+						</div>
+						<div class="gallery-caption">
+							<span class="gallery-meta">November 2026 &middot; Riverside, CA</span>
+							<h4 class="gallery-title">SIGSPATIAL 2026</h4>
+							<p>Best Paper Award at the SpatialConnect &rsquo;26 workshop for <em>Where Guidance Happens</em>, our work with the University of Minnesota.</p>
+						</div>
+						<ul class="gallery-album" hidden>
+							<li><a href="img/gallery/sigspatial2026/01.jpg" data-thumb="img/gallery/sigspatial2026/01-thumb.jpg" data-alt="Five researchers standing in a row, four holding Best Paper Award certificates">Authors of <em>Where Guidance Happens: Toward a Knowledge Graph of Situated Orientation and Mobility Instruction</em> with their Best Paper Award certificates at SpatialConnect &rsquo;26 (ACM SIGSPATIAL 2026), Riverside, CA. Photo shared by Yao-Yi Chiang.</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-4">
 					<div class="gallery-item" id="gallery-assets2026" tabindex="0" role="button" aria-label="Open the ASSETS 2026 album">
 						<div class="gallery-cover">
 							<img src="img/gallery/assets2026/cover.jpg" alt="Azizul Haque standing next to the ASPIRE poster at ASSETS 2026" loading="lazy">
@@ -1446,7 +1493,7 @@
 						<div class="gallery-caption">
 							<span class="gallery-meta">October 2025 &middot; Denver, USA</span>
 							<h4 class="gallery-title">ASSETS 2025</h4>
-							<p>Two full papers from the lab: the smart-glasses form-filling assistant and accessible slide presentations via intelligent real-time editing.</p>
+							<p>Two papers from the lab: the smart-glasses form-filling assistant and accessible slide presentations via intelligent real-time editing.</p>
 						</div>
 						<ul class="gallery-album" hidden>
 							<li><a href="img/gallery/assets2025/01.jpg" data-thumb="img/gallery/assets2025/01-thumb.jpg" data-alt="Azizul Haque standing beside his poster">Azizul Haque presents <em>Accessible Slide Presentation via Intelligent Real-time Editing: Insights from a Wizard-of-Oz Study</em> at ASSETS 2025 in Denver. Azizul Hoque, Jonggi Hong.</a></li>
@@ -1487,7 +1534,7 @@
 				<p><strong>Prospective PhD students:</strong> We are looking for motivated PhD students interested in
 					human-computer interaction, accessibility, and human-AI interaction, in particular (1) accessible
 					AI and visual assistance for blind and low-vision people and (2) wearable and non-visual
-					interaction with smart glasses and haptics. Please see our <a href="#about">research
+					interaction with smart glasses and haptics. Please see our <a href="about/">research
 						focus</a>. If you believe you are the right fit, apply to the <a
 						href="https://www.stevens.edu/program/computer-science-phd">Stevens Computer Science PhD
 						program</a>, name Dr. Hong in your statement, and email him at <a href="mailto:jhong8@stevens.edu">jhong8@stevens.edu</a>
@@ -1537,7 +1584,7 @@
 	<script src="js/jquery.magnific-popup.min.js" defer></script>
 	<script src="js/jquery.meanmenu.js" defer></script>
 	<script src="js/plugins.js?v=2" defer></script>
-	<script src="js/main.js?v=18" defer></script>
+	<script src="js/main.js?v=20" defer></script>
 	<script>
 		//Lazy load YouTube videos
 		function init() {
