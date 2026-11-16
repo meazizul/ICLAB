@@ -1,5 +1,5 @@
 /* =====================================================================================
-   Profile page (person.html?id=<id>), in the style of the Makeability Lab member pages.
+   Profile page (people/<id>/), in the style of the Makeability Lab member pages.
 
    Reads index.html so there is a single place to edit:
      team card (name, role, photo, links) . publications . videos . recent news
@@ -11,8 +11,9 @@
 	var DATA = window.ICL_DATA || {};
 	DATA.people = DATA.people || {}; DATA.projects = DATA.projects || []; DATA.talks = DATA.talks || [];
 	var $root = $('#person');
+	/* people/<id>/index.html carries the id on <html data-person="...">; person.html?id=<id> still works too */
 	var params = (function () { try { return new URLSearchParams(location.search); } catch (e) { return null; } })();
-	var id = ((params && params.get('id')) || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
+	var id = (document.documentElement.getAttribute('data-person') || (params && params.get('id')) || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
 
 	function esc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
 	function norm(s) { return String(s || '').toLowerCase().replace(/\bdr\.?\s+/g, '').replace(/[.,'’]/g, '').replace(/\s+/g, ' ').trim(); }
@@ -187,7 +188,7 @@
 
 		if (sections.length) {
 			h.push('<nav class="person-tabs" aria-label="Sections on this page"><div class="container"><span class="person-tabs-name">' + esc(p.plain) + '</span><div class="person-tabs-links">');
-			sections.forEach(function (s) { h.push('<a href="#person-' + s.key + '" data-key="' + s.key + '">' + s.label + ' <span>(' + s.n + ')</span></a>'); });
+			sections.forEach(function (s) { h.push('<a href="people/' + id + '/#person-' + s.key + '" data-key="' + s.key + '">' + s.label + ' <span>(' + s.n + ')</span></a>'); });
 			h.push('</div></div></nav>');
 		}
 
@@ -308,7 +309,7 @@
 		if (!$tabs.length) return;
 		var offset = function () { return ($('#sticky-header').outerHeight() || 70) + $root.find('.person-tabs').outerHeight() + 10; };
 		$tabs.on('click', function (e) {
-			var $t = $($(this).attr('href'));
+			var $t = $('#person-' + $(this).data('key'));
 			if (!$t.length) return;
 			e.preventDefault();
 			$('html, body').animate({ scrollTop: $t.offset().top - offset() + 2 }, 500);

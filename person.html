@@ -3,6 +3,8 @@
 
 <head>
 	<meta charset="utf-8">
+	<script>/* old links (person.html?id=x) go to the clean profile address (people/x/) */
+		(function () { if (document.documentElement.getAttribute('data-person')) return; var m = location.search.match(/[?&]id=([a-z0-9-]+)/i); if (m) location.replace('people/' + m[1].toLowerCase() + '/'); })();</script>
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>People | Interactive Computing Lab</title>
 	<meta name="description" content="The Interactive Computing Lab at Stevens Institute of Technology designs and evaluates accessible interactions with emerging technologies: AI, wearables, and smart glasses.">
@@ -78,8 +80,9 @@
 	</header>
 	<!-- header end -->
 
-	<!-- Profile page. Everything inside #person is filled in by js/person.js from index.html and js/lab-data.js.
-	     Link to a profile with person.html?id=<id>, where <id> is the team photo file name (img/team/<id>.jpg). -->
+	<!-- Profile page template. Each person's page lives at people/<id>/index.html (<id> = team photo file name,
+	     img/team/<id>.jpg) and is a copy of this file made by tools/build-profiles.py.
+	     Everything inside #person is filled in by js/person.js from index.html and js/lab-data.js. -->
 	<main id="person" class="person-page" aria-live="polite">
 		<div class="container">
 			<p class="person-loading">Loading profile&hellip;</p>
@@ -111,7 +114,7 @@
 	<script src="js/plugins.js?v=2" defer></script>
 	<script src="js/main.js?v=17" defer></script>
 	<script src="js/lab-data.js?v=1" defer></script>
-	<script src="js/person.js?v=1" defer></script>
+	<script src="js/person.js?v=2" defer></script>
 </body>
 
 </html>

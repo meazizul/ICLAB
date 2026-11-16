@@ -18,7 +18,9 @@ A mirror of the same files is kept at https://github.com/meazizul/ICLAB (live at
 ```
 (repository root)
 ├── index.html          ← THE ENTIRE SITE. 95% of edits happen in this one file.
-├── person.html         Profile page for each team member (person.html?id=firstname-lastname). Filled in automatically.
+├── people/<id>/        One profile page per team member, e.g. people/azizul-haque/ (made by tools/build-profiles.py).
+├── person.html         Template for those profile pages. Edit this, not the copies in people/.
+├── tools/build-profiles.py   Makes people/<id>/index.html for everyone on the team page (see 3.10).
 ├── js/lab-data.js      Profile extras: bios, projects, and talks (see 3.10).
 ├── js/person.js        Builds the profile pages from index.html + js/lab-data.js. No need to edit.
 ├── style.css           Template stylesheet. Do not edit. Override in css/custom.css instead.
@@ -113,7 +115,7 @@ Clicking it scrolls to the Gallery and opens that album. Link paper titles in th
     <div class="team-item" data-person="firstname-lastname">
         <div class="team-item-image">
             <img src="img/team/firstname-lastname.jpg" alt="Headshot of Full Name">
-            <a class="team-profile-link" href="person.html?id=firstname-lastname" aria-label="View Full Name&rsquo;s profile"></a>
+            <a class="team-profile-link" href="people/firstname-lastname/" aria-label="View Full Name&rsquo;s profile"></a>
             <div class="team-item-detail">
                 <h5 class="team-item-title">Full Name</h5>
                 <span class="team-profile-cta">View profile <i class="ion-arrow-right-c" aria-hidden="true"></i></span>
@@ -124,13 +126,13 @@ Clicking it scrolls to the Gallery and opens that album. Link paper titles in th
                 </div>
             </div>
         </div>
-        <h4 class="team-item-name"><a href="person.html?id=firstname-lastname">Full Name</a></h4>
+        <h4 class="team-item-name"><a href="people/firstname-lastname/">Full Name</a></h4>
         <span class="team-item-role">Ph.D. Student, Computer Science</span>
     </div>
 </div>
 ```
 
-Use the photo's file name (without `.jpg`) as the id in all three places: `data-person`, and the two `person.html?id=` links. That gives the person a profile page automatically (see 3.10).
+Use the photo's file name (without `.jpg`) as the id in all three places: `data-person`, and the two `people/.../` links. Then create the person's profile page (see 3.10): run `python3 tools/build-profiles.py`, or on GitHub copy any `people/<someone>/index.html` to `people/<new-id>/index.html` and change the id in `data-person="..."` and the name in `<title>`.
 
 Delete any social `<a>` link lines you do not need. Available icons: `ion-link` (website), `ion-email`, `ion-social-linkedin`, `ion-social-github`, `ion-social-twitter`, `ion-university` (Google Scholar).
 
@@ -268,7 +270,7 @@ The title and tagline are the `<h1>` and `<p class="lead">` right below.
 
 ### 3.10 Profile pages (people, projects, talks)
 
-Every team member and alumnus has a profile page in the style of the Makeability Lab member pages: photo, role, links, a short bio, their recent news, a row of contribution counts (papers, first-author papers, awards, projects, talks, videos), and sections for **Projects, Papers, Videos, and Talks**. Clicking a photo or name in Our Team opens it, for example `person.html?id=azizul-haque`.
+Every team member and alumnus has a profile page in the style of the Makeability Lab member pages: photo, role, links, a short bio, their recent news, a row of contribution counts (papers, first-author papers, awards, projects, talks, videos), and sections for **Projects, Papers, Videos, and Talks**. Clicking a photo or name in Our Team opens it. Every person has their own address, for example **https://interactivecomputinglab.github.io/people/azizul-haque/**, which is good to put on a CV or LinkedIn.
 
 Most of it fills in **by itself** from `index.html`:
 
@@ -293,7 +295,15 @@ So adding a paper, a video, or a news line on `index.html` updates every profile
 
 - **Talks.** Newest first. `people` lists who presented, `type` is `Talk` or `Poster`, and `links` can have `paper`, `slides`, `video`, and `photos` (for example `index.html#gallery-dis2026`).
 
-Preview profile pages through the local server in Option B (`python3 -m http.server`). Opened as a plain file, the page cannot read `index.html` and shows "Profile unavailable".
+**New team member? Make their page.** Each address is a small folder, `people/<id>/index.html`, copied from `person.html`. After adding someone to Our Team (3.2), run:
+
+```bash
+python3 tools/build-profiles.py
+```
+
+It writes a page for everyone on the team page, with their name in the browser tab and in link previews. Re-run it whenever you change `person.html`. You do **not** need to re-run it for new papers, news, bios, projects or talks; those appear by themselves. No Python? Copy any `people/<someone>/` folder on GitHub and change the id in `data-person="..."` and the name in `<title>`.
+
+Preview profile pages through the local server in Option B (`python3 -m http.server`). Opened as a plain file, the page cannot read `index.html` and shows "Profile unavailable". Old links of the form `person.html?id=<id>` still work; they forward to `people/<id>/`.
 
 ---
 
@@ -335,6 +345,8 @@ Free tools for cropping and resizing: Preview on macOS (Tools → Adjust Size), 
 **A year is missing from the year menu, or clicking it does nothing.** The year needs both a `<nav class="pub-years">` link with `href="#pubs-2027"` and a section with `<a name="pubs-2027"></a>`; the two numbers must match.
 
 **A profile says "Profile unavailable".** It was opened as a file. Use `python3 -m http.server` (Option B), or check it on the live site.
+
+**A team member's photo opens a "404 File not found" page.** Their `people/<id>/` folder does not exist yet. Run `python3 tools/build-profiles.py` (or copy a folder, see 3.10), and check the id matches the photo file name.
 
 **A paper is missing from someone's profile.** Their name in the paper's author line is spelled differently from their team card. Add that spelling to `aliases` in `js/lab-data.js`.
 
