@@ -91,7 +91,9 @@ Find `<h2>Recent News</h2>`. The items are lines inside one `<p>`. Add the newes
 <strong>Oct 2026:</strong> Our paper <em>Paper Title</em> is accepted to <strong>CHI 2027</strong>!<br>
 ```
 
-Keep the list to roughly the last two years; delete old lines from the bottom.
+Keep the list to the current and previous year (for example 2026 and 2025); delete older lines from the bottom.
+
+You do not need to worry about length: the page shows only as many items as fit beside the About us text, so both columns end on the same line, and the rest open with a **More news** link. On phones it shows the newest four.
 
 The pulsing **NEW** badge is added automatically to whichever line is first, so it moves on its own when you add a line at the top. To link a news item to a photo album, add a Photos pill at the end of the line, pointing at the album's `id` from the Gallery section:
 

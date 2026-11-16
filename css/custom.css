@@ -426,3 +426,9 @@ a.person-card:hover .person-card-title { color: #B30C38; }
 	.person-grid-4, .person-grid-3 { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .cite-pop { animation: none; } .person-card-img img { transition: none; } }
+
+/* ---------- Recent News list (built from the <p> by main.js) ---------- */
+.news-list .news-item { margin: 0 0 7px; }
+.news-more { margin-top: 2px; padding: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; color: #B30C38; background: none; border: 0; cursor: pointer; }
+.news-more:hover, .news-more:focus { text-decoration: underline; outline: none; }
+.news-list .news-item.is-clamped { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }

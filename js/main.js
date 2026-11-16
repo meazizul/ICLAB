@@ -325,9 +325,65 @@
 		openAlbumByHash(location.hash, 900);
 	})();
 
-	/* Recent News: mark the newest line (the first one) with a pulsing NEW badge. It moves by itself
-	   when a new line is added at the top, so there is nothing to update by hand. */
-	$('h2').filter(function () { return $.trim($(this).text()) === 'Recent News'; }).next('p').find('strong').first().after('<span class="news-new" title="Latest news">NEW</span>');
+	/*----------------------------
+	Recent News.
+	- index.html keeps the news as one <p> with a <br> between items (easy to edit); here each item
+	  becomes its own block.
+	- The newest item (the first one) gets a pulsing NEW badge. It moves by itself when a new item is
+	  added at the top.
+	- Only as many items as fit beside the About us text are shown, so both columns end on the same
+	  line; the rest open with "More news".
+	------------------------------ */
+	(function () {
+		var $h2 = $('h2').filter(function () { return $.trim($(this).text()) === 'Recent News'; }).first();
+		var $p = $h2.next('p');
+		if (!$p.length) return;
+		var items = $p.html().split(/<br\s*\/?>/i).map($.trim).filter(Boolean);
+		var $list = $('<div class="news-list"></div>').html(items.map(function (h) { return '<p class="news-item">' + h + '</p>'; }).join(''));
+		$p.replaceWith($list);
+		$list.find('.news-item').first().find('strong').first().after('<span class="news-new" title="Latest news">NEW</span>');
+
+		var $items = $list.find('.news-item');
+		var $more = $('<button type="button" class="news-more" aria-expanded="false"></button>').insertAfter($list);
+		var $about = $h2.closest('.row').children().first();
+		var expanded = false;
+
+		function fit() {
+			$items.removeClass('is-collapsed is-clamped').css('-webkit-line-clamp', '');
+			if (expanded) { $more.text('Show less').attr('aria-expanded', 'true').show(); return; }
+			var full = $items.length, clampLines = 0;
+			if ($(window).width() < 768) {
+				full = Math.min(4, $items.length);             /* columns are stacked on phones: keep it short */
+			} else {
+				var $last = $about.find('p').last();
+				if ($last.length) {
+					var target = $last.offset().top + $last.outerHeight() - $more.outerHeight(true);
+					full = 0;
+					$items.each(function () { if ($(this).offset().top + $(this).outerHeight() <= target + 2) full++; else return false; });
+					full = Math.max(full, 2);
+					/* fill the rest of the space with the start of the next item, cut off with "..." */
+					var $next = $items.eq(full);
+					if ($next.length) {
+						var lh = parseFloat($next.css('line-height')) || 20;
+						clampLines = Math.floor((target - $next.offset().top + 2) / lh);
+						if (clampLines < 2) clampLines = 0;
+					}
+				}
+			}
+			$items.each(function (i) {
+				if (i === full && clampLines) $(this).addClass('is-clamped').css('-webkit-line-clamp', String(clampLines));
+				else $(this).toggleClass('is-collapsed', i >= full);
+			});
+			var more = $items.length - full;
+			$more.text('More news (' + more + ')').attr('aria-expanded', 'false').toggle(more > 0);
+		}
+		$more.on('click', function () { expanded = !expanded; fit(); if (!expanded) $('html, body').animate({ scrollTop: $h2.offset().top - 90 }, 300); });
+		var t = null;
+		$(window).on('resize', function () { clearTimeout(t); t = setTimeout(fit, 120); });
+		$(window).on('load', fit);
+		if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+		fit();
+	})();
 
 	/* magnificPopup video view */
 	$('.popup-video').magnificPopup({
