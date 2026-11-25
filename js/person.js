@@ -68,7 +68,7 @@
 			['ion-email', 'Email', 'ion-email'], ['ion-university', 'Google Scholar', 'ion-university'],
 			['ion-social-linkedin', 'LinkedIn', 'ion-social-linkedin'], ['ion-social-github', 'GitHub', 'ion-social-github'],
 			['ion-social-twitter', 'Twitter', 'ion-social-twitter'], ['ion-ios-world-outline', 'Stevens profile', 'ion-ios-world-outline'],
-			['ion-link', 'Website', 'ion-link']
+			['icon-orcid', 'ORCID', 'icon-orcid'], ['ion-link', 'Website', 'ion-link']
 		];
 		$(card).find('.team-social-icon a').each(function () {
 			var icon = $(this).find('i').attr('class') || '', href = $(this).attr('href');

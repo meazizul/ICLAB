@@ -516,3 +516,19 @@ a.person-card:hover .person-card-title { color: #B30C38; }
 	.person-grid-4 .person-card-meta { font-size: 11.5px; }
 	.talk-card .person-card-links .pub-btn { padding: 1px 7px; }
 }
+
+/* ORCID "iD" icon (the icon font has none): team card circle and profile link */
+.icon-orcid { font-style: normal; font-weight: 700; font-family: Arial, Helvetica, sans-serif; letter-spacing: -0.5px; }
+.icon-orcid::before { content: "iD"; }
+.team-social-icon .icon-orcid { font-size: 13px; }
+.person-links .icon-orcid { display: inline-block; width: 15px; height: 15px; margin-right: 2px; border-radius: 50%; background: #A6CE39; color: #fff; font-size: 8px; line-height: 15px; text-align: center; vertical-align: 1px; letter-spacing: 0; }
+
+/* Team card hover icons: one centered row (wraps evenly only on narrow cards) */
+.team-item-detail .team-social-icon { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.team-item-detail .team-social-icon a { width: 31px; height: 31px; line-height: 31px; margin: 0; font-size: 15px; }
+.team-item-detail .team-social-icon .icon-orcid { font-size: 12px; }
+@media (max-width: 767px) {
+	.basic-team-area .team-item-detail .team-social-icon { gap: 4px; }
+	.basic-team-area .team-item-detail .team-social-icon a { width: 26px; height: 26px; line-height: 25px; margin: 0; font-size: 12px; }
+	.basic-team-area .team-item-detail .team-social-icon .icon-orcid { font-size: 10px; }
+}
