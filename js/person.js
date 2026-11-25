@@ -109,7 +109,15 @@
 		/* ---------- talks (lab-data.js) ---------- */
 		var talks = DATA.talks.filter(function (t) { return (t.people || []).indexOf(id) > -1; });
 
-		/* ---------- recent news (Recent News list) ---------- */
+		/* ---------- recent news (Recent News list) ----------
+		   A news line belongs to this person if it links to one of their papers (by DOI) or names them. */
+		var myDois = {};
+		papers.forEach(function (x) {
+			$(x.el).find('a[href*="doi.org/"]').each(function () { myDois[this.getAttribute('href').split('doi.org/')[1].toLowerCase()] = true; });
+		});
+		function linksMyPaper($c) {
+			return $c.find('a[href*="doi.org/"]').toArray().some(function (a) { return myDois[a.getAttribute('href').split('doi.org/')[1].toLowerCase()]; });
+		}
 		var news = [];
 		var newsH2 = Array.prototype.filter.call(doc.querySelectorAll('h2'), function (h) { return $.trim(h.textContent) === 'Recent News'; })[0];
 		if (newsH2) {
@@ -118,7 +126,7 @@
 				var $c = $('<div>').html(chunk);
 				$c.find('.news-photos').remove();
 				var text = $.trim($c.text());
-				if (!text || !mentions(text)) return;
+				if (!text || !(mentions(text) || linksMyPaper($c))) return;
 				var date = $.trim($c.find('strong').first().text()).replace(/:$/, '');
 				$c.find('strong').first().remove();
 				news.push({ date: date, html: $.trim($c.html()) });
